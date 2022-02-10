@@ -1,0 +1,24 @@
+{
+  "name": "node_tabnine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.bundle.js",
+    "build": "webpack",
+    "dev": "nodemon ./server.js localhost 3080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2",
+    "cors": "^2.8.5",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
