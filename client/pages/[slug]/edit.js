@@ -1,45 +1,8 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
 import EditQuestionComponent from '../../components/EditQuestionComponent';
 import Layout from '../../components/Layout';
-import nextCookies from 'next-cookies';
 import AddQuestionComponent from '../../components/AddQuestionComponent';
-import Link from 'next/link';
-
-const componentStyles = css`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
-  // margin: 10px;
-  // max-width: 400px;
-  div {
-    // align-content: center;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: center;
-
-    div {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-
-      div {
-        display: flex;
-        flex-direction: row;
-
-        div {
-          display: flex;
-          flex-direction: row;
-        }
-      }
-    }
-  }
-`;
-
-// import { getQuestionWhereSurveyIdIs,getSurveysByUserId } from '../../util/database';
+import { getAuthSession } from '../../util/withAuth';
+import axios from 'axios';
 
 export default function dashboard(props) {
   const user = props.user;
@@ -57,22 +20,14 @@ export default function dashboard(props) {
   }
   if (access === true) {
     const username = user.username;
-    // props.user.username;
-    // console.log('user', user);
-    // console.log('get cookie username', cookie.get.JSON('username'))
     const surveyId = props.surveyId;
     const slug = props.slug;
     const questions = props.questions;
     const survey = props.survey;
 
-    // function checkIfLoggedIn() {
-    //   if (user.id === 1)
-    //     return (window.location.href = `/signup?returnTo=login?returnTo=${slug}/edit`);
-    //   else return (window.location.href = `/${slug}`);
-    // }
     return (
       <Layout username={username}>
-        <div css={componentStyles}>
+        <div>
           <div
             style={{
               backgroundColor: '#F7FCFC',
@@ -83,6 +38,10 @@ export default function dashboard(props) {
           >
             <h1>{survey.title}</h1>
             <h4>www.survey.com/{survey.customSlug}</h4>
+          </div>
+          <div className='bg-red-500 text-violet-300'>
+            <h1>{survey.title}</h1>
+            <h4>www.survey.1com/{survey.customSlug}</h4>
           </div>
           {questions.map((question) => {
             return (
@@ -190,42 +149,114 @@ export default function dashboard(props) {
   );
 }
 
+// export async function getServerSideProps(context) {
+//   const { session } = nextCookies(context);
+//   // const slug = context.query.slug;
+
+//   // const { getSurveyBySlug } = await import('../../util/databasea.ats');
+//   // const survey = await getSurveyBySlug(slug);
+//   // if (survey === undefined) {
+//   //   return { props: {} };
+//   // }
+
+//   // const { getQuestionWhereSurveyIdIs } = await import('../../util/databasea.ats');
+//   // const questions = await getQuestionWhereSurveyIdIs(survey.id);
+
+//   // if (await isTokenValid(session)) {
+//   //   // console.log('token valid');
+//   //   const { getSessionByToken } = await import('../../util/databasea.ats');
+//   //   const sessionByToken = await getSessionByToken(session);
+
+//   //   const userId = sessionByToken.userId;
+//   //   const { getUserById } = await import('../../util/databasea.ats');
+//   //   const user = await getUserById(userId);
+
+//   //   user.createdAt = JSON.stringify(user.createdAt);
+
+//   //   if (survey.userId === user.id) {
+//   //     return {
+//   //       props: { access: true, user, slug, survey, questions },
+//   //     };
+//   //   } else return { props: { access: false, user } };
+//   // }
+//   // const dummyUser = { id: 1 };
+//   // if (survey.userId == dummyUser.id) {
+//   //   return {
+//   //     props: { access: true, slug: slug, user: dummyUser, survey, questions },
+//   //   };
+//   // } else 
+
+//   return { props: { access: false } };
+// }
+
 export async function getServerSideProps(context) {
-  const { session } = nextCookies(context);
-  // const slug = context.query.slug;
+  console.log("edit")
 
-  // const { getSurveyBySlug } = await import('../../util/databasea.ats');
-  // const survey = await getSurveyBySlug(slug);
-  // if (survey === undefined) {
-  //   return { props: {} };
-  // }
+  const token = await getAuthSession(context);
 
-  // const { getQuestionWhereSurveyIdIs } = await import('../../util/databasea.ats');
-  // const questions = await getQuestionWhereSurveyIdIs(survey.id);
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
 
-  // if (await isTokenValid(session)) {
-  //   // console.log('token valid');
-  //   const { getSessionByToken } = await import('../../util/databasea.ats');
-  //   const sessionByToken = await getSessionByToken(session);
+  try {
+    // var res = await axios.get(`http://localhost:3080/user`, {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // }
+    // )
 
-  //   const userId = sessionByToken.userId;
-  //   const { getUserById } = await import('../../util/databasea.ats');
-  //   const user = await getUserById(userId);
+    const slug = context.query.slug;
 
-  //   user.createdAt = JSON.stringify(user.createdAt);
+    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { slug: slug }
+    }
+    )
+    console.log("response")
+    console.log(data)
+    var survey = data
+    if (survey === undefined) {
+      return { props: {} };
+    }
 
-  //   if (survey.userId === user.id) {
-  //     return {
-  //       props: { access: true, user, slug, survey, questions },
-  //     };
-  //   } else return { props: { access: false, user } };
-  // }
-  // const dummyUser = { id: 1 };
-  // if (survey.userId == dummyUser.id) {
-  //   return {
-  //     props: { access: true, slug: slug, user: dummyUser, survey, questions },
-  //   };
-  // } else 
+    const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { survey: survey.id }
+    })
 
-  return { props: { access: false } };
+    console.log("questions")
+    var questions = questionsres.data
+
+
+    var res = await axios.get(`http://localhost:3080/user`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+    )
+
+    var user = res.data
+    console.log(user)
+
+    return {
+      props: { access: true, slug, user, survey, questions },
+    };
+
+    // if (survey.userId === user.id) {
+    //   return {
+    //     props: { access: true, user, slug, survey, questions },
+    // props: { access: true, slug: slug, user: dummyUser, survey, questions },
+    //   };
+    // } else return { props: { access: false, user } };
+  } catch (e) {
+    console.log(e)
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
 }

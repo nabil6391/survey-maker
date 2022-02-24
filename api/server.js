@@ -20,14 +20,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT', 'DELETE');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader('Access-Control-Allow-Methods', "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
   next();
 })
 
 app.use('/api/dev', require('./routes/dev'));
 app.use('/api/v1/users', require('./routes/users'));
-app.use('/api/v1/dev2', withAuth, require('./routes/dev'));
+app.use('/api/v1/categories', withAuth, require('./routes/categories'));
+app.use('/api/v1/subcategories', withAuth, require('./routes/subcategories'));
+app.use('/api/v1/surveys', require('./routes/surveys'));
+app.use('/api/v1/questions', require('./routes/questions'));
+app.use('/api/v1/responses', withAuth, require('./routes/responses'));
 
 const mySecret = process.env.JWT_SECRET;
 
@@ -42,25 +47,23 @@ function withAuth(req, res, next) {
   } else if (req.cookies != undefined && req.cookies.jwt != undefined) {
     token = req.cookies.jwt;
   }
-  console.log(req)
-  console.log("token")
-  console.log(token)
 
   if (!token) {
+    console.log("returning")
     return res
       .status(401)
       .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
   }
 
   try {
-    const decoded = jwt.verify(token, mySecret); xw
-
-    req.user = decoded.sub;
+    const decoded = jwt.verify(token, mySecret);
+    req.user = decoded;
 
     console.log("req.user")
     console.log(req.user)
     return next();
   } catch (err) {
+    console.log(err)
     return res
       .status(401)
       .json({ error: true, code: 'token.expired', message: 'Token invalid.' })
@@ -71,7 +74,7 @@ function withAuth(req, res, next) {
 app.post("/register", async (req, res) => {
   try {
 
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ where: { email: req.body.email } });
     if (user) {
       return res.status(403).json({ message: "User already exists" });
     }
@@ -98,7 +101,7 @@ app.post("/register", async (req, res) => {
 //Login User
 app.post("/login", async (req, res) => {
   try {
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ where: { email: req.body.email } });
     if (!user) {
       return res.status(404).json({ message: "wrong credencials" });
     }
@@ -126,9 +129,13 @@ app.post("/login", async (req, res) => {
 //Authenticate User
 app.get("/user", withAuth, async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.user.email }).select("-password");
-    return res.json(user);
+    console.log("user")
+    console.log(req.user)
+    const user = await User.findOne({ where: { email: req.user.email } });
+    const { password, ...data } = await user.toJSON();
+    return res.json(data);
   } catch (err) {
+    console.log(err)
     return res.status(404).send({ message: "Something went wrong" });
   }
 });

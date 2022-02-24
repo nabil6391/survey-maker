@@ -2,8 +2,10 @@
 /** @jsxRuntime classic */
 import { jsx, css } from '@emotion/core';
 import Layout from '../../components/Layout';
-import nextCookies from 'next-cookies';
 import BarChartComponent from '../../components/BarChartComponent';
+import { getAuthSession } from '../util/withAuth';
+import axios from 'axios';
+
 
 const layoutStyles = css`
 display: flex;
@@ -85,6 +87,55 @@ export default function stats(props) {
 }
 
 export async function getServerSideProps(context) {
+  const token = await getAuthSession(context);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+
+
+  try {
+    // var res = await axios.get(`http://localhost:3080/user`, {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // }
+    // )
+
+    const slug = context.query.slug;
+
+    const survey = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { slug: slug }
+    }
+    )
+    if (survey === undefined) {
+      return { props: {} };
+    }
+
+    const questions = await axios.get(`http://localhost:3080/api/v1/questions`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { survey: survey.id }
+    })
+
+    // if (survey.userId === user.id) {
+    //   return {
+    //     props: { access: true, user, slug, survey, questions },
+    //   };
+    // } else return { props: { access: false, user } };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
   // const { session } = nextCookies(context);
 
   // if (await isTokenValid(session)) {

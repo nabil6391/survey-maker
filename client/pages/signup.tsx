@@ -4,8 +4,6 @@ import { jsx, css } from '@emotion/core';
 import Layout from '../components/Layout.js';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next';
-import Cookies from "js-cookie";
 import { useAuth } from "../util/authProvider";
 import axios from 'axios';
 

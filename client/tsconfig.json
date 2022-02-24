@@ -34,7 +34,8 @@
     "**/*.mjs",
     "client/components/Modal",
     "pages/logout.atsx",
-    "util/databasea.ats"
+    "util/databasea.ats",
+    "../tailwind.config copy.js"
   ],
   "exclude": [
     "node_modules"

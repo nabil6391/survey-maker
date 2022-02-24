@@ -2,9 +2,10 @@
 /** @jsxRuntime classic */
 import { jsx, css } from '@emotion/core';
 import Layout from '../../components/Layout';
-import nextCookies from 'next-cookies';
 import { useState } from 'react';
-import Link from 'next/link';
+import { getAuthSession } from '../../util/withAuth';
+import axios from 'axios';
+
 
 const formStyles = css`
 display: flex;
@@ -55,6 +56,7 @@ const QuestionStyles = css`
 `;
 
 export default function slug(props) {
+  console.log("slug started")
   const slug = props.slug;
   const survey = props.survey;
   const loggedIn = props.loggedIn;
@@ -85,11 +87,7 @@ export default function slug(props) {
     };
   });
 
-
-  const [responseValues, setResponseValues] = useState(
-    defaultValues,
-
-  );
+  const [responseValues, setResponseValues] = useState(defaultValues);
 
   function updateResponseValues(questionId, responseValue) {
     const newResponseValues = responseValues.map((response) => {
@@ -101,7 +99,6 @@ export default function slug(props) {
       }
       return response;
     });
-
 
     return setResponseValues(newResponseValues);
   }
@@ -137,8 +134,6 @@ export default function slug(props) {
       </div>
     );
   });
-
-
 
   if (loggedIn) {
     return (
@@ -176,10 +171,11 @@ export default function slug(props) {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const response = await fetch('/api/addresponse', {
+              const response = await fetch('http://localhost:3080/api/v1/responses', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                  surveyId: survey.id,
                   responseValues: responseValues,
                 }),
               });
@@ -203,7 +199,63 @@ export default function slug(props) {
 
 
 export async function getServerSideProps(context) {
-  const slug = context.query.slug;
+  console.log("index")
+  const token = await getAuthSession(context);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  try {
+    // var res = await axios.get(`http://localhost:3080/user`, {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // }
+    // )
+
+    const slug = context.query.slug;
+
+    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { slug: slug }
+    }
+    )
+    console.log("response")
+    console.log(data)
+    var survey = data
+    if (survey === undefined) {
+      return { props: {} };
+    }
+
+    const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { survey: survey.id }
+    })
+
+    console.log("questions")
+    var questions = questionsres.data
+    return {
+      props: { access: true, slug, survey, questions },
+    };
+
+    // if (survey.userId === user.id) {
+    //   return {
+    //     props: { access: true, user, slug, survey, questions },
+    //   };
+    // } else return { props: { access: false, user } };
+  } catch (e) {
+    console.log(e)
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
   // const { session } = nextCookies(context);
 
   // const { getSurveyBySlug } = await import('../../util/databasea.ats');

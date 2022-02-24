@@ -21,20 +21,43 @@ const login = () => {
     const options = {
       headers: { "content-type": "application/json" }
     }
+    axios.defaults.baseURL = 'http://localhost:3080/'
 
     const res = await axios
-      .post(`http://localhost:3080/login`, payload, options)
-      .then((response) => {
+      .post(`/login`, payload, options)
+      .then(async (response) => {
         if (response.status = 200) {
           // setUser(data.user)
 
-          console.log(response.data)
+          // console.log(response.data)
 
           Cookies.set('jwt', response.data, {
             expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000),
           });
 
-          router.push('/new')
+          // axios.defaults.headers.common = { 'Authorization': `bearer ${response.data}` }
+
+          const config = {
+            headers: { Authorization: `Bearer ${response.data}` }
+          };
+
+          console.log("calling user1")
+          try {
+            var res = await axios.get(`/user`, config)
+            console.log(res)
+            router.push('/new')
+          } catch (e) {
+            console.log("Return to login")
+            return {
+              redirect: {
+                destination: '/login',
+                permanent: false,
+              },
+            }
+          }
+
+
+
         }
       })
       .catch((err) => {
