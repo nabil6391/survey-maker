@@ -2,7 +2,20 @@ const Response = require('../models/responses');
 
 exports.getAll = async (req, res, next) => {
   try {
-    const ALL = await Response.findAll();
+    const options = {
+      where: {},
+    };
+
+    if (req.query.surveyId)
+      options.where.surveyId = req.query.surveyId
+
+    if (req.query.categoryId)
+      options.where.categoryId = req.query.categoryId
+
+    if (req.query.subcategoryId)
+      options.where.subcategoryId = req.query.subcategoryId
+
+    const ALL = await Response.findAll(options);
     return res.status(200).json(ALL);
   } catch (error) {
     return res.status(500).json(error);
@@ -21,17 +34,8 @@ exports.getOne = async (req, res, next) => {
 exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      questionId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      responseValue: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      }
+      questionId: req.body.questionId,
+      responseValue: req.body.email,
     };
 
     try {

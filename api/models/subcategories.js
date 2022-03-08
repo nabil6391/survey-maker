@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../util/database');
 
-const Subcategory = db.define('surveys', {
+const Subcategory = db.define('subcategories', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,

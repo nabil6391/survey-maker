@@ -1,89 +1,77 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
 import Layout from '../../components/Layout';
 import { useState } from 'react';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import Stepper from '../../components/Stepper';
+import StepperControl from '../../components/StepperControl';
 
-
-const formStyles = css`
-display: flex;
-  flex-direction: column;
-  align-items: center;
-  h1{color:#767474;}
-form{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin-top: 50px;
-  background-color: #f7fcfc;
-  border-radius: 10px;
-  margin: 10px;
-  padding: 20px;
-  width: 80%;
-  max-width:500px;
-  h2{margin: 60px 0px 20px 0px}
-  button{
-    width: 100%;
-    margin-top:50px;
-    border-color: #f7fcfc;
-    font-size: 16px;
-    font-weight: 500;
-    color:#f7fcfc;
-    a{font-size: 16px;
-      font-weight: 520;
-      color:#f7fcfc;}
-  }
-  
-  }
-`;
-
-const QuestionStyles = css`
-  display: flex;
-  flex-direction: column;
-  
-  input {
-    width: 100%;
-  }
-  div {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    
-  }
-`;
+import { UseContextProvider } from "../../context/StepperContext";
+import Demographic from '../../components/Demographic'
+import CategorySubSection from '../../components/CategorySubSection'
 
 export default function slug(props) {
   console.log("slug started")
-  const slug = props.slug;
   const survey = props.survey;
   const loggedIn = props.loggedIn;
 
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const steps = [
+    "Profile Information",
+  ];
+  props.categories.forEach(element => {
+    steps.push(element.title)
+  });
+  steps.push("Complete")
+
+  const displayStep = (step) => {
+    switch (step) {
+      case 1:
+        return <Demographic />;
+      case 2:
+        return <CategorySubSection index={step - 1} categories={categories} subcategories={subcategories} questions={questions} />;
+
+      default:
+        return <Demographic />;
+    }
+  };
+
+  const handleClick = (direction) => {
+    let newStep = currentStep;
+
+    direction === "next" ? newStep++ : newStep--;
+    // check if steps are within bounds
+    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    const response = await fetch('/api/addresponse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        responseValues: responseValues,
+      }),
+    });
+  };
+
   if (!props.questions) {
-    if (loggedIn) {
-      return (
-        <Layout username={props.user.username}>
-          <h3 style={{ color: '#d5d4d4' }}>Oops..This page does not exist</h3>
-        </Layout>
-      );
-    } else
-      return (
-        <Layout>
-          <h3 style={{ color: '#d5d4d4' }}>Oops..This page does not exist</h3>
-        </Layout>
-      );
-    const questions = props.questions;
+    return (
+      <Layout>
+        <h3 style={{ color: '#d5d4d4' }}>Oops..This page does not exist</h3>
+      </Layout>
+    );
   }
   const questions = props.questions;
+  const categories = props.categories;
+  const subcategories = props.subcategories;
 
   const defaultValues = questions.map((question) => {
     return {
       questionId: question.id,
-      responseValue: Math.ceil(
-        (question.valueMax - question.valueMin) / 2 + question.valueMin,
-      ),
+      responseValue: '',
     };
   });
 
@@ -103,124 +91,76 @@ export default function slug(props) {
     return setResponseValues(newResponseValues);
   }
 
-  const listOfQuestions = questions.map((question) => {
-    return (
-      <div css={QuestionStyles}>
-        <h2>{question.title}</h2>
+  return <Layout>
+    <div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
+      <form onSubmit={handleSubmit} >
 
-        <input
-          onChange={(e) => {
-            updateResponseValues(question.id, Number(e.currentTarget.value));
+        <h1>{survey.title}</h1>
 
-          }}
-          type="range"
-          min={`${question.valueMin}`}
-          max={`${question.valueMax}`}
-          id={`${question.id}`}
-          name={`${question.title}`}
-          value={
-            responseValues.find((r) => r.questionId === question.id)
-              .responseValue
-          }
-        ></input>
-        <div>
-          <div>
-            {question.descriptionMin}({question.valueMin})
+        <div className="mx-auto rounded-2xl bg-white pb-2 shadow-xl md:w-1/2">
+          {/* Stepper */}
+          <div className="horizontal container mt-5 ">
+            <Stepper steps={steps} currentStep={currentStep} />
+
+            <div className="my-10 p-10 ">
+              <UseContextProvider>{displayStep(currentStep)}</UseContextProvider>
+            </div>
           </div>
-          <div>
-            {question.descriptionMax}({question.valueMax})
-          </div>
-        </div>
-      </div>
-    );
-  });
 
-  if (loggedIn) {
-    return (
-      <Layout username={props.user.username}>
-        <div css={formStyles}>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const response = await fetch('/api/addresponse', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  responseValues: responseValues,
-                }),
-              });
-            }}
-          >
-            <h1>{survey.title}</h1>
-            {listOfQuestions}
-            <button
-              onClick={(e) => {
-                window.location.href = '/thanks';
-              }}
-            >
-              SUBMIT!
-            </button>
-          </form>
+          {/* navigation button */}
+          {currentStep !== steps.length && (
+            <StepperControl
+              handleClick={handleClick}
+              currentStep={currentStep}
+              steps={steps}
+            />
+          )}
         </div>
-      </Layout>
-    );
-  } else
-    return (
-      <Layout>
-        <div css={formStyles}>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const response = await fetch('http://localhost:3080/api/v1/responses', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  surveyId: survey.id,
-                  responseValues: responseValues,
-                }),
-              });
-            }}
-          >
-            <h1>{survey.title}</h1>
-            {listOfQuestions}
-            <button
-              onClick={(e) => {
-                window.location.href = '/thanks';
-              }}
-            >
-              SUBMIT!
-            </button>
-          </form>
-        </div>
-      </Layout>
-    );
+
+        {questions.map((question) => {
+          return (
+            <div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
+              <h2>{question.title}</h2>
+
+              <input
+                onChange={(e) => {
+                  updateResponseValues(question.id, Number(e.currentTarget.value));
+
+                }}
+                type="range"
+                min={`${question.valueMin}`}
+                max={`${question.valueMax}`}
+                id={`${question.id}`}
+                name={`${question.title}`}
+                value={
+                  responseValues.find((r) => r.questionId === question.id)
+                    .responseValue
+                }
+              ></input>
+              <div>
+                <div>
+                  {question.descriptionMin}({question.valueMin})
+                </div>
+                <div>
+                  {question.descriptionMax}({question.valueMax})
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+      </form>
+    </div>
+  </Layout>
 }
-
-
 
 export async function getServerSideProps(context) {
   console.log("index")
-  const token = await getAuthSession(context);
-
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
 
   try {
-    // var res = await axios.get(`http://localhost:3080/user`, {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // }
-    // )
-
     const slug = context.query.slug;
 
     const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
-      headers: { Authorization: `Bearer ${token}` },
       params: { slug: slug }
     }
     )
@@ -232,21 +172,33 @@ export async function getServerSideProps(context) {
     }
 
     const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: { survey: survey.id }
+      params: { surveyId: survey.id }
+    })
+    console.log("questions2")
+
+    const categoriesres = await axios.get(`http://localhost:3080/api/v1/categories`, {
+      params: { surveyId: survey.id }
+    })
+    console.log("questions1")
+
+    const subcategoriesres = await axios.get(`http://localhost:3080/api/v1/subcategories`, {
+      params: { surveyId: survey.id }
     })
 
     console.log("questions")
+
     var questions = questionsres.data
+    var categories = categoriesres.data
+    var subcategories = subcategoriesres.data
+    console.log(questions)
+    console.log(categories)
+    console.log(subcategories)
+
+    var userId = uuidv4()
     return {
-      props: { access: true, slug, survey, questions },
+      props: { access: true, slug, userId, survey, questions, categories, subcategories },
     };
 
-    // if (survey.userId === user.id) {
-    //   return {
-    //     props: { access: true, user, slug, survey, questions },
-    //   };
-    // } else return { props: { access: false, user } };
   } catch (e) {
     console.log(e)
     return {
@@ -256,49 +208,5 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  // const { session } = nextCookies(context);
-
-  // const { getSurveyBySlug } = await import('../../util/databasea.ats');
-  // const survey = await getSurveyBySlug(slug);
-
-
-  // if (survey !== undefined) {
-  //   const { getQuestionWhereSurveyIdIs } = await import('../../util/databasea.ats');
-  //   const questions = await getQuestionWhereSurveyIdIs(survey.id);
-
-
-  //   if (await isTokenValid(session)) {
-
-  //     const { getSessionByToken } = await import('../../util/databasea.ats');
-  //     const sessionByToken = await getSessionByToken(session);
-
-
-  //     const userId = sessionByToken.userId;
-
-
-  //     const { getUserById } = await import('../../util/databasea.ats');
-  //     const user = await getUserById(userId);
-
-  //     user.createdAt = JSON.stringify(user.createdAt);
-  //     return {
-  //       props: {
-  //         slug,
-  //         survey,
-  //         questions,
-  //         user,
-  //         loggedIn: true,
-  //       },
-  //     };
-  //   }
-
-  //   return {
-  //     props: {
-  //       slug,
-  //       survey,
-  //       questions,
-  //       loggedIn: false,
-  //     },
-  //   };
-  // }
   return { props: {} };
 }

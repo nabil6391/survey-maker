@@ -1,81 +1,79 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
+
 import Layout from '../components/Layout';
 import nextCookies from 'next-cookies';
 import { useState } from 'react';
 import Link from 'next/link';
 
 
-const formStyles = css`
-display: flex;
-  flex-direction: column;
-  // align-items: center;
-  align-items: center;
-  h1{color:#767474;}
-form{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin-top: 50px;
-  background-color: #f7fcfc;
-  border-radius: 10px;
-  margin: 10px;
-  padding: 20px;
-  width: 80%;
-  max-width:500px;
-  align-content: center;
+// const formStyles = css`
+// display: flex;
+//   flex-direction: column;
+//   // align-items: center;
+//   align-items: center;
+//   h1{color:#767474;}
+// form{
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   margin-top: 50px;
+//   background-color: #f7fcfc;
+//   border-radius: 10px;
+//   margin: 10px;
+//   padding: 20px;
+//   width: 80%;
+//   max-width:500px;
+//   align-content: center;
 
-  text-align:center;
+//   text-align:center;
 
-  h1{
-    color:#363232;
-    margin-bottom:20px;
-    font-size: 38px;
-  }
+//   h1{
+//     color:#363232;
+//     margin-bottom:20px;
+//     font-size: 38px;
+//   }
 
-  h3{
-    margin-top:20px;
-    font-weight: 500;
-  }
-  h4{
-    margin-top: 5px;
-  }
-  div{
-    margin-top: 10px;
-    display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+//   h3{
+//     margin-top:20px;
+//     font-weight: 500;
+//   }
+//   h4{
+//     margin-top: 5px;
+//   }
+//   div{
+//     margin-top: 10px;
+//     display: flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   justify-content: space-between;
 
-  button{
-    width: 120px;
-    // border-color: #f7fcfc;
-    // font-size: 16px;
-    // font-weight: 500;
-    
-  }
-  }
-  
-  // button{
-  //   width: 100%;
-  //   margin-top:50px;
-  //   border-color: #f7fcfc;
-  //   font-size: 16px;
-  //   font-weight: 500;
-  //   color:#f7fcfc;
-  // }
-  
-  // algn-self: center;}
-}
-`;
+//   button{
+//     width: 120px;
+//     // border-color: #f7fcfc;
+//     // font-size: 16px;
+//     // font-weight: 500;
+
+//   }
+//   }
+
+//   // button{
+//   //   width: 100%;
+//   //   margin-top:50px;
+//   //   border-color: #f7fcfc;
+//   //   font-size: 16px;
+//   //   font-weight: 500;
+//   //   color:#f7fcfc;
+//   // }
+
+//   // algn-self: center;}
+// }
+// `;
 
 export default function thanks(props) {
   const loggedIn = props.loggedIn;
   if (loggedIn) {
     return (
       <Layout username={props.user.username}>
-        <div css={formStyles}>
+        <div>
           <form
           // onSubmit={async (e) => {
           //   e.preventDefault();
@@ -136,7 +134,7 @@ export default function thanks(props) {
   } else
     return (
       <Layout>
-        <div css={formStyles}>
+        <div >
           <form
           // onSubmit={async (e) => {
           //   e.preventDefault();

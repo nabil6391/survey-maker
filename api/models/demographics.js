@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../util/database');
 
-const Response = db.define('responses', {
+const Demographic = db.define('demographics', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -22,4 +22,4 @@ const Response = db.define('responses', {
   }
 });
 
-module.exports = Response;
+module.exports = Demographic;

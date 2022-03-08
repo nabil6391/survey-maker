@@ -1,35 +1,33 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
+
 import Layout from '../../components/Layout';
 import BarChartComponent from '../../components/BarChartComponent';
-import { getAuthSession } from '../util/withAuth';
+import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 
 
-const layoutStyles = css`
-display: flex;
-  flex-direction: column;
-;
-  align-items: center;
-  h1{color:#767474;margin:30px 0px}
-div{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
+// const layoutStyles = css`
+// display: flex;
+//   flex-direction: column;
+// ;
+//   align-items: center;
+//   h1{color:#767474;margin:30px 0px}
+// div{
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   align-items: center;
 
-  background-color: #f7fcfc;
-  border-radius: 10px;
-  margin: 10px 0px;
-  
-  width: 90%;
-  max-width: 500px;
+//   background-color: #f7fcfc;
+//   border-radius: 10px;
+//   margin: 10px 0px;
 
-  h2{margin: 0px 0px 20px 0px}
-  
-}
-  `;
+//   width: 90%;
+//   max-width: 500px;
+
+//   h2{margin: 0px 0px 20px 0px}
+
+// }
+//   `;
 
 export default function stats(props) {
   if (props.access === true) {
@@ -40,11 +38,9 @@ export default function stats(props) {
 
     const responsesSimplified = responses.flat();
 
-
-
     return (
       <Layout username={props.user.username}>
-        <div css={layoutStyles}>
+        <div >
           <div>
             <h1>{survey.title}</h1>
 
@@ -87,9 +83,83 @@ export default function stats(props) {
 }
 
 export async function getServerSideProps(context) {
+  console.log("stats")
   const token = await getAuthSession(context);
 
   if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  try {
+
+    const slug = context.query.slug;
+
+    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { slug: slug }
+    }
+    )
+    console.log("response")
+    console.log(data)
+    var survey = data[0]
+    if (survey === undefined) {
+      return { props: {} };
+    }
+
+    const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { surveyId: survey.id }
+    })
+    console.log("questions2")
+
+    const categoriesres = await axios.get(`http://localhost:3080/api/v1/categories`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { surveyId: survey.id }
+    })
+    console.log("questions1")
+
+    const subcategoriesres = await axios.get(`http://localhost:3080/api/v1/subcategories`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { surveyId: survey.id }
+    })
+
+    console.log("questions")
+
+    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { surveyId: survey.id }
+    })
+
+    console.log("questions")
+
+    var questions = questionsres.data
+    var categories = categoriesres.data
+    var subcategories = subcategoriesres.data
+    var responses = responsesres.data
+    console.log(questions)
+    console.log(categories)
+    console.log(subcategories)
+    console.log(responses)
+
+    var res = await axios.get(`http://localhost:3080/api/v1/demographics`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+    )
+
+    var user = res.data
+    console.log(user)
+
+    return {
+      props: { access: true, slug, user, survey, questions, categories, subcategories },
+    };
+
+  } catch (e) {
+    console.log(e)
     return {
       redirect: {
         destination: '/login',

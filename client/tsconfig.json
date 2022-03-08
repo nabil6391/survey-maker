@@ -35,7 +35,9 @@
     "client/components/Modal",
     "pages/logout.atsx",
     "util/databasea.ats",
-    "../tailwind.config copy.js"
+    "../tailwind.config copy.js",
+    "pages/index.jsx",
+    "components/Stepper.jsx"
   ],
   "exclude": [
     "node_modules"

@@ -1,8 +1,18 @@
 const Category = require('../models/categories');
 
 exports.getAll = async (req, res, next) => {
+  const options = {
+    where: {},
+  };
+
+  if (req.query.surveyId)
+    options.where.surveyId = req.query.surveyId
+
+  if (req.query.slug)
+    options.where.slug = req.query.slug
+
   try {
-    const ALL = await Category.findAll();
+    const ALL = await Category.findAll(options);
     return res.status(200).json(ALL);
   } catch (error) {
     return res.status(500).json(error);
@@ -21,23 +31,8 @@ exports.getOne = async (req, res, next) => {
 exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-      },
-      surveyId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      }
+      surveyId: req.body.surveyId,
+      title: req.body.title
     };
 
     try {
@@ -55,9 +50,8 @@ exports.createOne = async (req, res, next) => {
 exports.updateOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
+      surveyId: req.body.surveyId,
+      title: req.body.title
     };
 
     try {

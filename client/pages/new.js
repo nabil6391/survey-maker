@@ -1,6 +1,4 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
+
 import React from 'react';
 import Layout from '../components/Layout';
 import { useState } from 'react';
@@ -8,61 +6,61 @@ import { useRouter } from 'next/router';
 import { getAuthSession } from '../util/withAuth';
 import axios from 'axios';
 
-const componentStyles = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  h1 {
-    color: #f7fcfc;
-    font-weight: normal;
-    margin: 10px 0px;
-    text-align: center;
-  }
+// const componentStyles = css`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   margin: 10px;
+//   h1 {
+//     color: #f7fcfc;
+//     font-weight: normal;
+//     margin: 10px 0px;
+//     text-align: center;
+//   }
 
-  form {
-    width: 80%;
-    max-width: 500px;
-    height: 220px;
-    background-color: #f7fcfc;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    padding-left: 20px;
-    padding: 20px;
-    margin-top: 20px;
-    justify-content: space-evenly;
-    border-style: solid;
-    border-width: 3px;
+//   form {
+//     width: 80%;
+//     max-width: 500px;
+//     height: 220px;
+//     background-color: #f7fcfc;
+//     border-radius: 10px;
+//     display: flex;
+//     flex-direction: column;
+//     flex-wrap: wrap;
+//     align-items: flex-start;
+//     padding-left: 20px;
+//     padding: 20px;
+//     margin-top: 20px;
+//     justify-content: space-evenly;
+//     border-style: solid;
+//     border-width: 3px;
 
-    input {
-      width: 100%;
-    }
+//     input {
+//       width: 100%;
+//     }
 
-    button {
-      width: 100%;
-      color: #f7fcfc;
-      font-size: 16px;
-      font-weight: 550;
-      border: none;
-    }
-    div {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      p {
-        margin-top: 5px;
-      }
-      input {
-        font-size: 13px;
-        width: 150px;
-        height: 20px;
-      }
-    }
-  }
-`;
+//     button {
+//       width: 100%;
+//       color: #f7fcfc;
+//       font-size: 16px;
+//       font-weight: 550;
+//       border: none;
+//     }
+//     div {
+//       display: flex;
+//       flex-direction: row;
+//       flex-wrap: wrap;
+//       p {
+//         margin-top: 5px;
+//       }
+//       input {
+//         font-size: 13px;
+//         width: 150px;
+//         height: 20px;
+//       }
+//     }
+//   }
+// `;
 
 export default function New(props) {
   const user = props.user;
@@ -79,7 +77,7 @@ export default function New(props) {
     //TODO input URL: make sure no spaces allowed
     <React.Fragment>
       <Layout username={user.username}>
-        <div css={componentStyles}>
+        <div>
           <img src="logo.svg" alt="" height="120" />
           <h1>a quick survey for honest feedback</h1>
           <form

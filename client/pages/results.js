@@ -1,6 +1,4 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx } from '@emotion/core';
+
 import Layout from '../components/Layout';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 

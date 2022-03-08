@@ -5,20 +5,6 @@ export type User = {
   passwordHash: string;
 };
 
-export type SerializedUser = {
-  id: number;
-  username: string;
-  createdAt: string;
-  passwordHash: string;
-};
-
-export type Session = {
-  id: number;
-  userId: number;
-  token: string;
-  expiryTimestamp: string;
-};
-
 export type Survey = {
   id: number;
   userId: number;
@@ -26,6 +12,20 @@ export type Survey = {
   title: string;
   customSlug: string;
   published: boolean;
+};
+
+export type Category = {
+  id: number;
+  surveyId: number;
+  createdAt: Date;
+  title: string;
+};
+export type SubCategory = {
+  id: number;
+  surveyId: number;
+  categoryId: number;
+  createdAt: Date;
+  title: string;
 };
 
 export type SerializedSurvey = {

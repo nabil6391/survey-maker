@@ -2,7 +2,17 @@ const Subcategory = require('../models/subcategories');
 
 exports.getAll = async (req, res, next) => {
   try {
-    const ALL = await Subcategory.findAll();
+    const options = {
+      where: {},
+    };
+
+    if (req.query.surveyId)
+      options.where.surveyId = req.query.surveyId
+
+    if (req.query.categoryId)
+      options.where.categoryId = req.query.categoryId
+
+    const ALL = await Subcategory.findAll(options);
     return res.status(200).json(ALL);
   } catch (error) {
     return res.status(500).json(error);
@@ -21,21 +31,9 @@ exports.getOne = async (req, res, next) => {
 exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      surveyId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      categoryId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      }
+      surveyId: req.body.surveyId,
+      categoryId: req.body.categoryId,
+      title: req.body.title
     };
 
     try {
@@ -53,9 +51,9 @@ exports.createOne = async (req, res, next) => {
 exports.updateOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
+      surveyId: req.body.surveyId,
+      categoryId: req.body.categoryId,
+      title: req.body.title
     };
 
     try {

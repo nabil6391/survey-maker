@@ -28,8 +28,8 @@ app.use((req, res, next) => {
 
 app.use('/api/dev', require('./routes/dev'));
 app.use('/api/v1/users', require('./routes/users'));
-app.use('/api/v1/categories', withAuth, require('./routes/categories'));
-app.use('/api/v1/subcategories', withAuth, require('./routes/subcategories'));
+app.use('/api/v1/categories', require('./routes/categories'));
+app.use('/api/v1/subcategories', require('./routes/subcategories'));
 app.use('/api/v1/surveys', require('./routes/surveys'));
 app.use('/api/v1/questions', require('./routes/questions'));
 app.use('/api/v1/responses', withAuth, require('./routes/responses'));

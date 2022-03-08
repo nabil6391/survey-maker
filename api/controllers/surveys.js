@@ -1,8 +1,15 @@
 const Survey = require('../models/surveys');
 
 exports.getAll = async (req, res, next) => {
+  const options = {
+    where: {},
+  };
+
+  if (req.query.slug)
+    options.where.slug = req.query.slug
+
   try {
-    const ALL = await Survey.findAll();
+    const ALL = await Survey.findAll(options);
     return res.status(200).json(ALL);
   } catch (error) {
     return res.status(500).json(error);

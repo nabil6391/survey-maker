@@ -1,22 +1,18 @@
 import { useState } from 'react';
-import { SubCategory, Survey } from '../util/types';
+import { Survey } from '../util/types';
 
-export default function AddQuestionComponent(props: { survey: Survey, subcategory: SubCategory }) {
+export default function AddCategoryComponent(props: { survey: Survey }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
 
 
   async function onSubmitFunction() {
-    const response = await fetch('http://localhost:3080/api/v1/questions', {
+    const response = await fetch('http://localhost:3080/api/v1/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         surveyId: surveyId,
-        categoryId: props.subcategory.categoryId,
-        subcategoryId: props.subcategory.id,
-        order: 1,
         title: title,
-        titleMy: title,
       }),
     });
     if (response.status == 201) {
@@ -25,14 +21,14 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
   }
 
   return (
-    <div className='bg-white m-2 rounded-xl p-5 '>
+    <div className='bg-white m-2 rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
       <form
         onSubmit={(e) => {
           e.preventDefault, (onSubmitFunction());
         }}
       >
         <input
-          placeholder="Question Title"
+          placeholder="Category Title"
           onChange={(e) => {
             setTitle(e.currentTarget.value);
           }}
@@ -43,7 +39,7 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
         //   location.reload(true);
         // }}
         >
-          Add question
+          Add Category
         </button>
       </form>
     </div>

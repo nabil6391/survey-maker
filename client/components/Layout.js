@@ -5,7 +5,7 @@ export default function Layout(props) {
   return (
     <>
       <Head>
-        <title>Quicksy</title>
+        <title>Survey</title>
         <link rel="icon" href="/logosmall.svg" />
       </Head>
       <Header username={username} />

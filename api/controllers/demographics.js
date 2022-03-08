@@ -1,4 +1,4 @@
-const Question = require('../models/questions');
+const Question = require('../models/demographics');
 const { Op } = require('sequelize');
 
 exports.getAll = async (req, res, next) => {

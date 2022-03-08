@@ -1,6 +1,4 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import { jsx, css } from '@emotion/core';
+
 import Layout from '../../components/Layout';
 import nextCookies from 'next-cookies';
 import Link from 'next/link';
@@ -11,73 +9,73 @@ import { getAuthSession } from '../../util/withAuth'
 //   getSurveysByUserId,
 // } from '../util/database';
 
-const dashboardStyles = css`
-  display: flex;
-  flex-direction: column;
-  margin: 30px 10px;
-  align-items: center;
+// const dashboardStyles = css`
+//   display: flex;
+//   flex-direction: column;
+//   margin: 30px 10px;
+//   align-items: center;
 
-  h3 {
-    color: #d5d4d4;
-    font-weight: 350;
-    font-size: 24px;
-  }
-  button {
-    color: #f7fcfc;
-    width: 90%;
-  }
-`;
+//   h3 {
+//     color: #d5d4d4;
+//     font-weight: 350;
+//     font-size: 24px;
+//   }
+//   button {
+//     color: #f7fcfc;
+//     width: 90%;
+//   }
+// `;
 
-const surveyStyles = css`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin: 20px 0px;
-  padding: 10px;
-  background-color: #f7fcfc;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  h1 {
-    margin-bottom: 5px;
-  }
-  div {
-    margin: 5px 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    max-width: 500px;
-    width: 100%;
-    a {
-      color: #878787;
-      background-color: #e9ebeb;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      border-radius: 10px;
-      padding: 5px 10px;
-    }
+// const surveyStyles = css`
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   margin: 20px 0px;
+//   padding: 10px;
+//   background-color: #f7fcfc;
+//   border-radius: 10px;
+//   width: 90%;
+//   max-width: 500px;
+//   h1 {
+//     margin-bottom: 5px;
+//   }
+//   div {
+//     margin: 5px 0px;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     max-width: 500px;
+//     width: 100%;
+//     a {
+//       color: #878787;
+//       background-color: #e9ebeb;
+//       width: 100%;
+//       display: flex;
+//       align-items: center;
+//       border-radius: 10px;
+//       padding: 5px 10px;
+//     }
 
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      div {
-        display: flex;
-        flex-direction: row;
-        //
-        justify-content: flex-start;
-        width: 90%;
-        h2 {
-          margin-right: 4px;
-        }
-        p {
-          color: #878787;
-        }
-      }
-    }
-  }
-`;
+//     div {
+//       display: flex;
+//       flex-direction: column;
+//       align-items: center;
+//       div {
+//         display: flex;
+//         flex-direction: row;
+//         //
+//         justify-content: flex-start;
+//         width: 90%;
+//         h2 {
+//           margin-right: 4px;
+//         }
+//         p {
+//           color: #878787;
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export default function dashboard(props) {
   const user = props.user;
@@ -114,7 +112,7 @@ export default function dashboard(props) {
     var surveyList = surveys.map((survey) => {
 
       return (
-        <div css={surveyStyles}>
+        <div>
           <h1>{survey.title}</h1>
           <div
             style={{
@@ -148,10 +146,6 @@ export default function dashboard(props) {
           </div>
           <div>
             <div>
-              {/* <div>
-                <h2>0</h2>
-                <p>questions</p>
-              </div> */}
               <button
                 style={{
                   backgroundColor: '#C1BFBF',
@@ -193,26 +187,13 @@ export default function dashboard(props) {
 
             </div>
           </div>
-          {/* <button
-            onClick={async (e) => {
-              const response = await fetch('/api/deletesurvey', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  id: survey.id,
-                }),
-              });
-            }}
-          >
-            delete
-          </button> */}
         </div>
       );
     });
 
   return (
     <Layout username={user.username}>
-      <div css={dashboardStyles}>
+      <div >
         <div
           style={{
             display: 'flex',
