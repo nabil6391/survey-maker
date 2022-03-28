@@ -32,7 +32,60 @@ app.use('/api/v1/categories', require('./routes/categories'));
 app.use('/api/v1/subcategories', require('./routes/subcategories'));
 app.use('/api/v1/surveys', require('./routes/surveys'));
 app.use('/api/v1/questions', require('./routes/questions'));
-app.use('/api/v1/responses', withAuth, require('./routes/responses'));
+app.use('/api/v1/responses', require('./routes/responses'));
+app.use('/api/v1/demographics', require('./routes/demographics'));
+
+const Demographic = require('./models/demographics');
+const Response = require('./models/responses');
+const Question = require('./models/questions');
+const Survey = require('./models/surveys');
+const Category = require('./models/categories');
+const SubCategory = require('./models/subcategories');
+const { Op } = require('sequelize');
+
+Response.belongsTo(Question)
+SubCategory.belongsTo(Category)
+Category.belongsTo(Survey)
+Question.belongsTo(Survey)
+Question.belongsTo(SubCategory)
+Question.belongsTo(Category)
+
+app.get("/api/v1/stats/:id", async (req, res, next) => {
+  try {
+    var surveyId = req.params.id
+
+    const user = await Response.findAll({
+      include: [
+        {
+          model: Question,
+        }
+      ]
+    });
+
+    console.log(user)
+    return res.status(201).json(user);
+
+
+    const options = {
+      where: {},
+    };
+
+    if (req.query.surveyId)
+      options.where.surveyId = req.query.surveyId
+
+    if (req.query.categoryId)
+      options.where.categoryId = req.query.categoryId
+
+    if (req.query.subcategoryId)
+      options.where.subcategoryId = req.query.subcategoryId
+
+    const ALL = await Demographic.findAll(options);
+    return res.status(200).json(ALL);
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json(error);
+  }
+});
 
 const mySecret = process.env.JWT_SECRET;
 
@@ -148,11 +201,9 @@ app.post("/logout", (req, res, next) => {
 
 (async () => {
   try {
-    await sequelize.sync(
-      { force: true }
-    );
+    await sequelize.sync();
     console.log("test");
-    app.listen(process.env.EXTERNAL_PORT || 3001);
+    app.listen(process.env.EXTERNAL_PORT || 3080);
   } catch (error) {
     console.error(error);
   }

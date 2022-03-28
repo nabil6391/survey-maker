@@ -11,23 +11,12 @@ import {
 export default function BarChartComponent(props) {
   const responses = props.responses;
   const question = props.question;
-  // const questions = props.questions;
-  // console.log('questions length', questions.length);
-  // for (let i = 0; i < questions.length; i++) {
-  //   console.log('lets run this stuff i times', i);
-  // }
-
-  // const question = questions[0];
 
   const responseValues = responses.map((r) => {
     if (r.questionId === question.id) {
       return r.responseValue;
     }
   });
-  // console.log('responseValues', responseValues);
-
-  // count occurence of a value:
-  //function(array,value)=>array.reduce((),0)
 
   const countOccurrences = (responseValues, value) =>
     responseValues.reduce((a, v) => (v === value ? a + 1 : a), 0);

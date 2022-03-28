@@ -5,7 +5,7 @@ const router = require('express').Router();
 router
   .get('/', controller.getAll)
   .get('/:id', controller.getOne)
-  .post('/', controller.createOne)
+  .post('/', controller.createAll)
   .put('/:id', controller.updateOne)
   .delete('/:id', controller.deleteOne);
 

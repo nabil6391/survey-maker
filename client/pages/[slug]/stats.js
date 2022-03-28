@@ -3,31 +3,11 @@ import Layout from '../../components/Layout';
 import BarChartComponent from '../../components/BarChartComponent';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
+import { Demographic, DemographicInfos } from '../../components/Demographic'
+import CategorySubSection from '../../components/CategorySubSection'
+import User from '../../components/User';
+import { useStepperContext } from "../../context/StepperContext";
 
-
-// const layoutStyles = css`
-// display: flex;
-//   flex-direction: column;
-// ;
-//   align-items: center;
-//   h1{color:#767474;margin:30px 0px}
-// div{
-//   display: flex;
-//   flex-direction: column;
-//   flex-wrap: wrap;
-//   align-items: center;
-
-//   background-color: #f7fcfc;
-//   border-radius: 10px;
-//   margin: 10px 0px;
-
-//   width: 90%;
-//   max-width: 500px;
-
-//   h2{margin: 0px 0px 20px 0px}
-
-// }
-//   `;
 
 export default function stats(props) {
   if (props.access === true) {

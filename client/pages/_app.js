@@ -1,10 +1,13 @@
 import '../styles/globals.css'
 import { AuthProvider } from "../util/authProvider"
+import { UseContextProvider } from "../context/StepperContext";
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <AuthProvider >
-      <Component {...pageProps} />
+      <UseContextProvider>
+        <Component {...pageProps} />
+      </UseContextProvider>
     </AuthProvider>
   )
 }

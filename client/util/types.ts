@@ -40,13 +40,12 @@ export type SerializedSurvey = {
 export type Question = {
   id: number;
   surveyId: number;
+  categoryId: number;
+  subcategoryId: number;
   itemOrder: number;
   questionType: string;
   title: string;
-  valueMin: number;
-  valueMax: number;
-  descriptionMin: string;
-  descriptionMax: string;
+  titleMy: string;
 };
 
 export type Response = {

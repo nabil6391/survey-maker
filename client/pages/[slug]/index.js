@@ -1,21 +1,23 @@
 import Layout from '../../components/Layout';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Stepper from '../../components/Stepper';
 import StepperControl from '../../components/StepperControl';
 
-import { UseContextProvider } from "../../context/StepperContext";
-import Demographic from '../../components/Demographic'
+import { Demographic, DemographicInfos } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
+import User from '../../components/User';
+import { useStepperContext } from "../../context/StepperContext";
 
 export default function slug(props) {
   console.log("slug started")
   const survey = props.survey;
-  const loggedIn = props.loggedIn;
+  const userId = props.userId;
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const steps = [
     "Profile Information",
@@ -25,36 +27,96 @@ export default function slug(props) {
   });
   steps.push("Complete")
 
+  const { userData, setUserData } = useStepperContext()
+
   const displayStep = (step) => {
     switch (step) {
       case 1:
         return <Demographic />;
       case 2:
-        return <CategorySubSection index={step - 1} categories={categories} subcategories={subcategories} questions={questions} />;
-
-      default:
-        return <Demographic />;
+        return <CategorySubSection index={step - 2} categories={categories} subcategories={subcategories} questions={questions} />;
+      case steps.length:
+        return <thanks />;
     }
   };
 
-  const handleClick = (direction) => {
+  const handleClick = async (direction) => {
     let newStep = currentStep;
 
     direction === "next" ? newStep++ : newStep--;
     // check if steps are within bounds
-    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
+
+
+    if (newStep > 0 && newStep <= steps.length - 1) {
+
+      switch (currentStep) {
+        case 1:
+          //Check if all data is present
+
+          var asd = Object.entries(userData)
+          // if (asd.length == 0 || Object.entries(DemographicInfos).length != asd.length) {
+          //   setErrorMessage("THere is an error")
+          // } else {
+          setCurrentStep(newStep);
+          // }
+          break
+        case steps.length:
+          try {
+            const response = await fetch('http://localhost:3080/api/v1/responses', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userData: userData,
+                responseValues: userData.responseValues,
+              }),
+            });
+
+            setCurrentStep(newStep);
+          } catch (e) {
+
+          }
+          break
+
+        default:
+          //check if all questions answered
+
+          var categoryQuestions = questions.filter(question => question.categoryId == currentStep - 1).map(q => q.id);
+          var responses = Object.entries(userData["responses"] ?? [])
+          var questionsAnswered = responses.filter(response => categoryQuestions.includes(parseInt(response[0]))).length
+
+          if (questionsAnswered == categoryQuestions.length) {
+
+            if (currentStep == steps.length - 1) {
+              try {
+                const response = await fetch('http://localhost:3080/api/v1/responses', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    userData: userData,
+                    responseValues: userData.responseValues,
+                  }),
+                });
+
+                setCurrentStep(newStep);
+              } catch (e) {
+
+              }
+            } else {
+              setCurrentStep(newStep);
+            }
+
+          } else {
+            setErrorMessage("Please input all information")
+          }
+      }
+    }
+
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const response = await fetch('/api/addresponse', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        responseValues: responseValues,
-      }),
-    });
+    console.log("submits")
   };
 
   if (!props.questions) {
@@ -68,42 +130,21 @@ export default function slug(props) {
   const categories = props.categories;
   const subcategories = props.subcategories;
 
-  const defaultValues = questions.map((question) => {
-    return {
-      questionId: question.id,
-      responseValue: '',
-    };
-  });
-
-  const [responseValues, setResponseValues] = useState(defaultValues);
-
-  function updateResponseValues(questionId, responseValue) {
-    const newResponseValues = responseValues.map((response) => {
-      if (questionId === response.questionId) {
-        return {
-          questionId: response.questionId,
-          responseValue: responseValue,
-        };
-      }
-      return response;
-    });
-
-    return setResponseValues(newResponseValues);
-  }
-
   return <Layout>
+
     <div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
+      <User ></User>
+
+      {errorMessage}
       <form onSubmit={handleSubmit} >
 
-        <h1>{survey.title}</h1>
-
-        <div className="mx-auto rounded-2xl bg-white pb-2 shadow-xl md:w-1/2">
+        <div className="mx-auto pb-2 ">
           {/* Stepper */}
           <div className="horizontal container mt-5 ">
             <Stepper steps={steps} currentStep={currentStep} />
 
             <div className="my-10 p-10 ">
-              <UseContextProvider>{displayStep(currentStep)}</UseContextProvider>
+              {displayStep(currentStep)}
             </div>
           </div>
 
@@ -117,41 +158,9 @@ export default function slug(props) {
           )}
         </div>
 
-        {questions.map((question) => {
-          return (
-            <div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
-              <h2>{question.title}</h2>
-
-              <input
-                onChange={(e) => {
-                  updateResponseValues(question.id, Number(e.currentTarget.value));
-
-                }}
-                type="range"
-                min={`${question.valueMin}`}
-                max={`${question.valueMax}`}
-                id={`${question.id}`}
-                name={`${question.title}`}
-                value={
-                  responseValues.find((r) => r.questionId === question.id)
-                    .responseValue
-                }
-              ></input>
-              <div>
-                <div>
-                  {question.descriptionMin}({question.valueMin})
-                </div>
-                <div>
-                  {question.descriptionMax}({question.valueMax})
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
       </form>
     </div>
-  </Layout>
+  </Layout >
 }
 
 export async function getServerSideProps(context) {
@@ -196,7 +205,7 @@ export async function getServerSideProps(context) {
 
     var userId = uuidv4()
     return {
-      props: { access: true, slug, userId, survey, questions, categories, subcategories },
+      props: { slug, userId, survey, questions, categories, subcategories },
     };
 
   } catch (e) {

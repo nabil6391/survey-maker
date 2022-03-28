@@ -8,18 +8,54 @@ const Demographic = db.define('demographics', {
     allowNull: false,
     primaryKey: true
   },
-  userId: {
-    type: Sequelize.INTEGER,
-    allowNull: true
-  },
-  questionId: {
+  surveyId: {
     type: Sequelize.INTEGER,
     allowNull: false
   },
-  responseValue: {
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  gender: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  age: {
     type: Sequelize.STRING,
     allowNull: false,
-  }
+  },
+  maritalStatus: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  qualification: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  rank: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  service: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  dutyArea: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  locationDuty: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  serviceYear: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  accomodation: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
 });
 
 module.exports = Demographic;

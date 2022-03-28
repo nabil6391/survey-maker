@@ -63,7 +63,6 @@ const login = () => {
       .catch((err) => {
         console.log(err)
         setError(err.response.data.message)
-        // setUser(null)
       });
   };
 
@@ -98,13 +97,14 @@ const login = () => {
             </div>
             <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>
           </form>
+          <p style={{ color: 'red' }}>{errorMessage}</p>
         </section>
       </main>
 
-      <div className="max-w-lg mx-auto text-center mt-12 mb-6">
+      <div className="max-w-lg mx-auto text-center mt-6 mb-6">
         <p className="text-black">Don't have an account? <a href="/signup" className="font-bold hover:underline">Sign up</a>.</p>
       </div>
-      <p style={{ color: 'red' }}>{errorMessage}</p>
+
 
     </div>
   );

@@ -8,6 +8,10 @@ const Response = db.define('responses', {
     allowNull: false,
     primaryKey: true
   },
+  surveyId: {
+    type: Sequelize.INTEGER,
+    allowNull: true
+  },
   userId: {
     type: Sequelize.INTEGER,
     allowNull: true

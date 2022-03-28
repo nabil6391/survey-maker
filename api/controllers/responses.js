@@ -12,8 +12,8 @@ exports.getAll = async (req, res, next) => {
     if (req.query.categoryId)
       options.where.categoryId = req.query.categoryId
 
-    if (req.query.subcategoryId)
-      options.where.subcategoryId = req.query.subcategoryId
+    if (req.query.categoryId)
+      options.where.userId = req.query.userIds
 
     const ALL = await Response.findAll(options);
     return res.status(200).json(ALL);
@@ -35,6 +35,7 @@ exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
       questionId: req.body.questionId,
+      userId: req.body.userId,
       responseValue: req.body.email,
     };
 
@@ -46,6 +47,35 @@ exports.createOne = async (req, res, next) => {
       return res.status(500).json(error);
     }
   } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.createAll = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    try {
+
+      const responses = Object.entries(req.body.userData.responses).map(([e, v]) => {
+        var USER_MODEL = {
+          questionId: e,
+          userId: 11,
+          responseValue: v,
+        }
+        return USER_MODEL
+      });
+
+      console.log(responses)
+      const user = await Response.bulkCreate(responses);
+      console.log('Response crerated');
+      console.log(user);
+      return res.status(201).json(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
+    }
+  } catch (error) {
+    console.log(error);
     return res.status(500).json(error);
   }
 };
@@ -84,10 +114,3 @@ exports.getAllBySurveyId = async (req, res, next) => {
     return res.status(500).json(error);
   }
 };
-
-// export async function getResponsesByQuestionId(id: number) {
-//   const responses = await sql<Response[]>`
-//   SELECT*from responses WHERE question_id = ${id}
-//   ;`;
-//   return responses.map((response: Response) => camelcaseKeys(response));
-// }

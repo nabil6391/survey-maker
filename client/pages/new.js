@@ -6,126 +6,77 @@ import { useRouter } from 'next/router';
 import { getAuthSession } from '../util/withAuth';
 import axios from 'axios';
 
-// const componentStyles = css`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   margin: 10px;
-//   h1 {
-//     color: #f7fcfc;
-//     font-weight: normal;
-//     margin: 10px 0px;
-//     text-align: center;
-//   }
-
-//   form {
-//     width: 80%;
-//     max-width: 500px;
-//     height: 220px;
-//     background-color: #f7fcfc;
-//     border-radius: 10px;
-//     display: flex;
-//     flex-direction: column;
-//     flex-wrap: wrap;
-//     align-items: flex-start;
-//     padding-left: 20px;
-//     padding: 20px;
-//     margin-top: 20px;
-//     justify-content: space-evenly;
-//     border-style: solid;
-//     border-width: 3px;
-
-//     input {
-//       width: 100%;
-//     }
-
-//     button {
-//       width: 100%;
-//       color: #f7fcfc;
-//       font-size: 16px;
-//       font-weight: 550;
-//       border: none;
-//     }
-//     div {
-//       display: flex;
-//       flex-direction: row;
-//       flex-wrap: wrap;
-//       p {
-//         margin-top: 5px;
-//       }
-//       input {
-//         font-size: 13px;
-//         width: 150px;
-//         height: 20px;
-//       }
-//     }
-//   }
-// `;
 
 export default function New(props) {
   const user = props.user;
   console.log('user data ')
   console.log(user)
   const [errorMessage, setErrorMessage] = useState('');
-
   const [title, setTitle] = useState('');
-
   const [slug, setSlug] = useState(title);
   const router = useRouter();
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:3080/api/v1/surveys', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: user.id,
+        title: title,
+        title_my: title,
+        slug: slug,
+      }),
+    });
+    console.log(response)
+    if (response.status === 201) {
+      router.push(`/${slug}/edit`);
+    } else {
+      if (response.status === 403) {
+        setErrorMessage('Slug not available!');
+      } else setErrorMessage('That Failed!');
+    }
+  };
 
   return (
     //TODO input URL: make sure no spaces allowed
     <React.Fragment>
       <Layout username={user.username}>
-        <div>
-          <img src="logo.svg" alt="" height="120" />
-          <h1>a quick survey for honest feedback</h1>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const response = await fetch('http://localhost:3080/api/v1/surveys', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  userId: user.id,
-                  title: title,
-                  title_my: title,
-                  slug: slug,
-                }),
-              });
-              console.log(response)
-              if (response.status === 201) {
-                router.push(`/${slug}/edit`);
-              } else {
-                if (response.status === 403) {
-                  setErrorMessage('Slug not available!');
-                } else setErrorMessage('That Failed!');
-              }
-            }}
-          >
-            <input
-              onChange={(e) => {
-                setTitle(e.currentTarget.value), setSlug(e.currentTarget.value.replace(/ /g, "-"));
-              }}
-              placeholder="My first Quicksy"
-            ></input>
-            <div>
-              <p>www.survey.com/</p>
-              <input
-                placeholder={slug}
-                onChange={(e) => {
-                  setSlug(e.currentTarget.value);
-                }}
-              />
-            </div>
+        <div className="body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0">
 
-            <button
-            >
-              CREATE SURVEY
-            </button>
-          </form>
+          <main className="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+            <section>
+              <h3 className="font-bold text-2xl">Create a Survey</h3>
+            </section>
+
+            <section className="mt-10">
+              <form className="flex flex-col" onSubmit={handleSubmit}>
+                <div className="mb-6 pt-3 rounded bg-gray-200">
+                  <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">Survey</label>
+
+                  <input
+                    onChange={(e) => {
+                      setTitle(e.currentTarget.value), setSlug(e.currentTarget.value.replace(/ /g, "-"));
+                    }}
+
+                    className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+                    placeholder="My first Quicksy"
+                  ></input>
+                  <br />
+
+                  <p>www.survey.com/{slug}</p>
+
+                </div>
+
+                <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">  CREATE SURVEY</button>
+              </form>
+            </section>
+          </main>
+
+          <p style={{ color: 'red' }}>{errorMessage}</p>
+
         </div>
-        {errorMessage}
+
       </Layout>
     </React.Fragment>
   );

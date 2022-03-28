@@ -1,4 +1,4 @@
-const Question = require('../models/demographics');
+const Demographic = require('../models/demographics');
 const { Op } = require('sequelize');
 
 exports.getAll = async (req, res, next) => {
@@ -10,13 +10,7 @@ exports.getAll = async (req, res, next) => {
     if (req.query.surveyId)
       options.where.surveyId = req.query.surveyId
 
-    if (req.query.categoryId)
-      options.where.categoryId = req.query.categoryId
-
-    if (req.query.subcategoryId)
-      options.where.subcategoryId = req.query.subcategoryId
-
-    const ALL = await Question.findAll(options);
+    const ALL = await Demographic.findAll(options);
     return res.status(200).json(ALL);
   } catch (error) {
     console.log(error)
@@ -26,7 +20,7 @@ exports.getAll = async (req, res, next) => {
 
 exports.getOne = async (req, res, next) => {
   try {
-    const user = await Question.findByPk(req.params.id);
+    const user = await Demographic.findByPk(req.params.id);
     return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json(error);
@@ -36,16 +30,22 @@ exports.getOne = async (req, res, next) => {
 exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
+      userId: req.body.userId,
       surveyId: req.body.surveyId,
-      categoryId: req.body.categoryId,
-      subcategoryId: req.body.subcategoryId,
-      itemOrder: req.body.order,
-      title: req.body.title,
-      titleMy: req.body.titleMy,
+      gender: req.body.gender,
+      age: req.body.age,
+      maritalStatus: req.body.maritalStatus,
+      qualification: req.body.qualification,
+      rank: req.body.rank,
+      service: req.body.service,
+      dutyArea: req.body.dutyArea,
+      locationDuty: req.body.locationDuty,
+      serviceYear: req.body.serviceYear,
+      accomodation: req.body.accomodation,
     };
 
-    const user = await Question.create(USER_MODEL);
-    console.log('Question crerated');
+    const user = await Demographic.create(USER_MODEL);
+    console.log('Demographic crerated');
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -56,16 +56,22 @@ exports.createOne = async (req, res, next) => {
 exports.updateOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
+      userId: req.body.userId,
       surveyId: req.body.surveyId,
-      categoryId: req.body.categoryId,
-      subcategoryId: req.body.subcategoryId,
-      itemOrder: req.body.order,
-      title: req.body.title,
-      titleMy: req.body.titleMy,
+      gender: req.body.gender,
+      age: req.body.age,
+      maritalStatus: req.body.maritalStatus,
+      qualification: req.body.qualification,
+      rank: req.body.rank,
+      service: req.body.service,
+      dutyArea: req.body.dutyArea,
+      locationDuty: req.body.locationDuty,
+      serviceYear: req.body.serviceYear,
+      accomodation: req.body.accomodation,
     };
 
     try {
-      const user = await Question.update(USER_MODEL, { where: { id: req.params.id } });
+      const user = await Demographic.update(USER_MODEL, { where: { id: req.params.id } });
       return res.status(200).json(user);
     } catch (error) { }
   } catch (error) {
@@ -75,7 +81,7 @@ exports.updateOne = async (req, res, next) => {
 
 exports.deleteOne = async (req, res, next) => {
   try {
-    const user = await Question.destroy({ where: { id: req.params.id } });
+    const user = await Demographic.destroy({ where: { id: req.params.id } });
     return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json(error);

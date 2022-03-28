@@ -1,15 +1,15 @@
 version: '3.8'
 services:
-  nextjs-ui:
-    build:
-      context: .
-    ports:
-      - "3001:3001"
-    container_name: nextjs-ui
-    stdin_open: true
-    volumes:
-      - ./my-app:/usr/src/app/client
-      - /usr/src/app/client/node_modules
+  # nextjs-ui:
+  #   build:
+  #     context: .
+  #   ports:
+  #     - "3001:3001"
+  #   container_name: nextjs-ui
+  #   stdin_open: true
+  #   volumes:
+  #     - ./client:/usr/src/app/client
+  #     - /usr/src/app/client/node_modules
   node_backend:
     container_name: node-api
     build:
@@ -24,6 +24,11 @@ services:
       - PGHOST=node_db
       - DB_PORT=5432
       - JWT_SECRET=adafafdwfwrw1
+      # - NODE_ENV=development
+    volumes:
+      - ./api:/usr/src/app/api
+      - /usr/src/app/api/node_modules
+      - /usr/src/app/api/node_modules/bcrypt
     depends_on:
       - node_db
   node_db:
@@ -36,7 +41,8 @@ services:
       - POSTGRES_PASSWORD=12345
       - POSTGRES_DB=pg_db
     volumes:
-      - nps_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
 
 volumes:
-  nps_data: {}
+  db:
+    driver: local
