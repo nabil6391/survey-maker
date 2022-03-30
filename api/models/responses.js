@@ -10,11 +10,11 @@ const Response = db.define('responses', {
   },
   surveyId: {
     type: Sequelize.INTEGER,
-    allowNull: true
+    allowNull: false
   },
   userId: {
-    type: Sequelize.INTEGER,
-    allowNull: true
+    type: Sequelize.UUID,
+    allowNull: false
   },
   questionId: {
     type: Sequelize.INTEGER,

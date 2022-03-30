@@ -52,21 +52,21 @@ export const DemographicInfos = {
         { name: 'Pahang', value: 'pahang' },
         { name: 'Selangor', value: 'slg' },
         { name: 'Kuala Lumpur', value: '' },
-        { name: 'Labuan', value: '' },
-        { name: 'Sabah', value: '' },
-        { name: 'Sarawak', value: '' },
+        { name: 'Labuan', value: 'lbn' },
+        { name: 'Sabah', value: 'sabh' },
+        { name: 'Sarawak', value: 'srk' },
     ],
     serviceYear: [
-        { name: 'Below 10 Years', value: '' },
-        { name: '11 - 15 Years', value: '' },
-        { name: '16 - 20 Years', value: '' },
-        { name: 'More than 21 Years', value: '' },
+        { name: 'Below 10 Years', value: '1' },
+        { name: '11 - 15 Years', value: '2' },
+        { name: '16 - 20 Years', value: '3' },
+        { name: 'More than 21 Years', value: '4' },
     ],
-    Accomodation: [
-        { name: 'Mess/Wisma', value: '' },
-        { name: 'Family Home', value: '' },
-        { name: 'Rented House', value: '' },
-        { name: 'Owned House', value: '' },
+    accomodation: [
+        { name: 'Mess/Wisma', value: 'asd' },
+        { name: 'Family Home', value: 'ad' },
+        { name: 'Rented House', value: 'add' },
+        { name: 'Owned House', value: 'dad' },
     ]
 }
 
@@ -83,7 +83,7 @@ export function Demographic() {
 
     return (
         <div className="flex flex-col ">
-            <div className="mt-10 sm:mt-0">
+            {/* <div className="mt-10 sm:mt-0">
                 <form action="#" method="POST">
                     <div className="col-span-6 sm:col-span-3">
                         <label htmlFor="country" className="block text-sm font-medium text-gray-700">
@@ -101,7 +101,7 @@ export function Demographic() {
                         </select>
                     </div>
                 </form>
-            </div>
+            </div> */}
 
             {Object.entries(DemographicInfos).map(([e, v]) => {
                 return <div className="mt-10">

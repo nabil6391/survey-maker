@@ -13,6 +13,15 @@ import { useStepperContext } from "../../context/StepperContext";
 
 export default function slug(props) {
   console.log("slug started")
+  if (!props.questions || props.questions.length == 0) {
+    return (
+      <Layout><div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
+        <h3 >Oops..This page does not exist</h3>
+      </div>
+      </Layout>
+    );
+  }
+
   const survey = props.survey;
   const userId = props.userId;
 
@@ -33,21 +42,20 @@ export default function slug(props) {
     switch (step) {
       case 1:
         return <Demographic />;
-      case 2:
+      default:
         return <CategorySubSection index={step - 2} categories={categories} subcategories={subcategories} questions={questions} />;
-      case steps.length:
+      case steps.length + 1:
         return <thanks />;
     }
   };
 
   const handleClick = async (direction) => {
     let newStep = currentStep;
-
+    console.log(newStep)
     direction === "next" ? newStep++ : newStep--;
     // check if steps are within bounds
-
-
-    if (newStep > 0 && newStep <= steps.length - 1) {
+    console.log(currentStep)
+    if (newStep > 0 && newStep <= steps.length) {
 
       switch (currentStep) {
         case 1:
@@ -60,35 +68,26 @@ export default function slug(props) {
           setCurrentStep(newStep);
           // }
           break
-        case steps.length:
-          try {
-            const response = await fetch('http://localhost:3080/api/v1/responses', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userData: userData,
-                responseValues: userData.responseValues,
-              }),
-            });
-
-            setCurrentStep(newStep);
-          } catch (e) {
-
-          }
-          break
-
         default:
-          //check if all questions answered
-
           var categoryQuestions = questions.filter(question => question.categoryId == currentStep - 1).map(q => q.id);
           var responses = Object.entries(userData["responses"] ?? [])
           var questionsAnswered = responses.filter(response => categoryQuestions.includes(parseInt(response[0]))).length
 
-          if (questionsAnswered == categoryQuestions.length) {
-
-            if (currentStep == steps.length - 1) {
+          console.log("checking3")
+          console.log(questionsAnswered, categoryQuestions.length)
+          if (direction != "next") {
+            setCurrentStep(newStep);
+          } else if (questionsAnswered == categoryQuestions.length) {
+            console.log("checking1")
+            console.log(currentStep)
+            console.log(steps.length - 1)
+            if (currentStep === steps.length - 1) {
+              console.log("checking")
               try {
-                const response = await fetch('http://localhost:3080/api/v1/responses', {
+
+                userData["surveyId"] = survey.id
+                userData["userId"] = userId
+                const response = await fetch('http://localhost:3080/api/v1/stats/' + survey.id, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
@@ -97,16 +96,24 @@ export default function slug(props) {
                   }),
                 });
 
-                setCurrentStep(newStep);
-              } catch (e) {
+                console.log(response)
+                if (response.status == 201) {
+                  setCurrentStep(newStep);
+                } else {
+                  setErrorMessage(response.statusText)
+                }
 
+              } catch (e) {
+                console.log(e)
+                setErrorMessage(e)
               }
             } else {
+              console.log("setSetp", newStep)
               setCurrentStep(newStep);
             }
 
           } else {
-            setErrorMessage("Please input all information")
+            // setErrorMessage("Please input all information")
           }
       }
     }
@@ -119,20 +126,14 @@ export default function slug(props) {
     console.log("submits")
   };
 
-  if (!props.questions) {
-    return (
-      <Layout>
-        <h3 style={{ color: '#d5d4d4' }}>Oops..This page does not exist</h3>
-      </Layout>
-    );
-  }
+
   const questions = props.questions;
   const categories = props.categories;
   const subcategories = props.subcategories;
 
   return <Layout>
 
-    <div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
+    <div className='bg-white rounded-xl p-5 shadow-2xl max-w-4xl mx-auto'>
       <User ></User>
 
       {errorMessage}
@@ -175,7 +176,7 @@ export async function getServerSideProps(context) {
     )
     console.log("response")
     console.log(data)
-    var survey = data
+    var survey = data[0]
     if (survey === undefined) {
       return { props: {} };
     }

@@ -15,7 +15,23 @@ const Category = db.define('categories', {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
-  }
+  },
+  titleMy: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  desc: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+  },
+  descMy: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+  },
+  itemOrder: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
 });
 
 module.exports = Category;

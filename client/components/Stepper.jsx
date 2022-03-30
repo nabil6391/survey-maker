@@ -6,7 +6,6 @@ const Stepper = ({ steps, currentStep }) => {
 
   const updateStep = (stepNumber, steps) => {
     const newSteps = [...steps];
-    console.log(newSteps);
     let count = 0;
     while (count < newSteps.length) {
       //current step
@@ -76,8 +75,8 @@ const Stepper = ({ steps, currentStep }) => {
         <div className="relative flex flex-col items-center text-teal-600">
           <div
             className={`rounded-full transition duration-500 ease-in-out border-2 border-gray-300 h-12 w-12 flex items-center justify-center py-3  ${step.selected
-                ? "bg-green-600 text-white font-bold border border-green-600 "
-                : ""
+              ? "bg-green-600 text-white font-bold border border-green-600 "
+              : ""
               }`}
           >
             {step.completed ? (

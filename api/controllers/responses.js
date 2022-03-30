@@ -1,4 +1,5 @@
 const Response = require('../models/responses');
+const Demographic = require('../models/demographics');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -55,6 +56,13 @@ exports.createAll = async (req, res, next) => {
   try {
     console.log(req.body);
     try {
+      const USER_MODEL = req.body.userData
+
+      const userDemo = await Demographic.create(USER_MODEL);
+      console.log(USER_MODEL);
+
+      console.log('Response crerated');
+      console.log(userDemo);
 
       const responses = Object.entries(req.body.userData.responses).map(([e, v]) => {
         var USER_MODEL = {

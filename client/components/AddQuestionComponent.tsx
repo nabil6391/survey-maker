@@ -5,7 +5,6 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
 
-
   async function onSubmitFunction() {
     const response = await fetch('http://localhost:3080/api/v1/questions', {
       method: 'POST',
@@ -25,20 +24,46 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
   }
 
   return (
-    <div className='bg-white m-2 rounded-xl p-5 '>
+    <div className='bg-white  rounded-xl p-5 '>
       <form
         onSubmit={(e) => {
           e.preventDefault, (onSubmitFunction());
         }}
       >
-        <input
-          placeholder="Question Title"
-          onChange={(e) => {
-            setTitle(e.currentTarget.value);
-          }}
-        />
+        <div className="col-span-6 sm:col-span-3">
+          <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+            Title In English
+          </label>
+          <input
+            type="text"
+            name="first-name"
+            id="first-name"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.currentTarget.value);
+            }}
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm border-gray-300 rounded-md outline outline-gray-300  p-2"
+          />
+        </div>
 
-        <button className='w-full mt-5 bg-gray-100 border-teal-400 border-2'
+        <div className="col-span-6 sm:col-span-3">
+          <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
+            Title in Bahasa
+          </label>
+          <input
+            type="text"
+            name="last-name"
+            id="last-name"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.currentTarget.value);
+            }}
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md outline outline-gray-300  p-2"
+          />
+        </div>
+
+
+        <button className='w-full mt-5 border-teal-400 border-2 bg-gray-200 hover:bg-gray-300'
         // onClick={(e) => {
         //   location.reload(true);
         // }}

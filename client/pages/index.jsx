@@ -13,7 +13,7 @@ export default function Home(props) {
 
       <div className="body-bg  pt-12 md:pt-20 pb-6 px-2 md:px-0">
 
-        <main className="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <main className="bg-white max-w-lg mx-auto p-8 md:p-12 rounded-lg shadow-2xl">
           <section>
             <h3 className="font-bold text-2xl">Welcome {props.user.username}</h3>
           </section>
@@ -44,7 +44,6 @@ export default function Home(props) {
               <button>+ New Survey</button>
             </a>
           </Link>
-          <p className="text-black">Create a new  <a href="/new" className="font-bold hover:underline">Survey</a>.</p>
         </div>
 
       </div>

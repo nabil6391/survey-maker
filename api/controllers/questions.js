@@ -5,6 +5,9 @@ exports.getAll = async (req, res, next) => {
   try {
     const options = {
       where: {},
+      order: [
+        ['itemOrder', 'ASC'],
+      ],
     };
 
     if (req.query.surveyId)
@@ -67,7 +70,9 @@ exports.updateOne = async (req, res, next) => {
     try {
       const user = await Question.update(USER_MODEL, { where: { id: req.params.id } });
       return res.status(200).json(user);
-    } catch (error) { }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   } catch (error) {
     return res.status(500).json(error);
   }

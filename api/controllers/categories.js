@@ -3,6 +3,9 @@ const Category = require('../models/categories');
 exports.getAll = async (req, res, next) => {
   const options = {
     where: {},
+    order: [
+      ['itemOrder', 'ASC'],
+    ],
   };
 
   if (req.query.surveyId)
@@ -32,7 +35,11 @@ exports.createOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
       surveyId: req.body.surveyId,
-      title: req.body.title
+      title: req.body.title,
+      titleMy: req.body.titleMy,
+      desc: req.body.desc,
+      descMy: req.body.descMy,
+      itemOrder: req.body.order,
     };
 
     try {
@@ -51,7 +58,11 @@ exports.updateOne = async (req, res, next) => {
   try {
     const USER_MODEL = {
       surveyId: req.body.surveyId,
-      title: req.body.title
+      title: req.body.title,
+      titleMy: req.body.titleMy,
+      desc: req.body.desc,
+      descMy: req.body.descMy,
+      itemOrder: req.body.order,
     };
 
     try {

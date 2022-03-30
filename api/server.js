@@ -54,35 +54,73 @@ app.get("/api/v1/stats/:id", async (req, res, next) => {
   try {
     var surveyId = req.params.id
 
-    const user = await Response.findAll({
+    const options = {
+      where: {},
       include: [
         {
           model: Question,
         }
       ]
-    });
-
-    console.log(user)
-    return res.status(201).json(user);
-
-
-    const options = {
-      where: {},
     };
 
     if (req.query.surveyId)
       options.where.surveyId = req.query.surveyId
 
-    if (req.query.categoryId)
-      options.where.categoryId = req.query.categoryId
+    const user = await Response.findAll(options);
 
-    if (req.query.subcategoryId)
-      options.where.subcategoryId = req.query.subcategoryId
+    console.log(user)
 
-    const ALL = await Demographic.findAll(options);
+    const ALL = await Demographic.findAll({
+      where: req.query.surveyId
+    });
+    console.log(ALL)
+
+    return res.status(201).json(user);
     return res.status(200).json(ALL);
   } catch (error) {
     console.log(error)
+    return res.status(500).json(error);
+  }
+});
+
+app.post("/api/v1/stats/:id", async (req, res, next) => {
+  try {
+    var surveyId = req.params.id
+
+    console.log("Posting");
+    try {
+      const USER_MODEL = req.body.userData
+
+      console.log(USER_MODEL);
+
+      const userDemo = await Demographic.create(USER_MODEL);
+
+      console.log('Demographic created');
+      console.log(userDemo);
+
+      var userId = USER_MODEL["userId"]
+      console.log(userId)
+      const responses = Object.entries(req.body.userData.responses).map(([e, v]) => {
+        var USER_MODEL = {
+          surveyId: surveyId,
+          questionId: e,
+          userId: userId,
+          responseValue: v,
+        }
+        return USER_MODEL
+      });
+
+      console.log(responses)
+      const user = await Response.bulkCreate(responses);
+      console.log('Response crerated');
+      console.log(user);
+      return res.status(201).json(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
+    }
+  } catch (error) {
+    console.log(error);
     return res.status(500).json(error);
   }
 });
@@ -112,8 +150,6 @@ function withAuth(req, res, next) {
     const decoded = jwt.verify(token, mySecret);
     req.user = decoded;
 
-    console.log("req.user")
-    console.log(req.user)
     return next();
   } catch (err) {
     console.log(err)
@@ -182,8 +218,6 @@ app.post("/login", async (req, res) => {
 //Authenticate User
 app.get("/user", withAuth, async (req, res, next) => {
   try {
-    console.log("user")
-    console.log(req.user)
     const user = await User.findOne({ where: { email: req.user.email } });
     const { password, ...data } = await user.toJSON();
     return res.json(data);
@@ -202,7 +236,7 @@ app.post("/logout", (req, res, next) => {
 (async () => {
   try {
     await sequelize.sync();
-    console.log("test");
+    console.log("sync started");
     app.listen(process.env.EXTERNAL_PORT || 3080);
   } catch (error) {
     console.error(error);

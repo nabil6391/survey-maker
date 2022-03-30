@@ -1,66 +1,350 @@
-
 import Layout from '../../components/Layout';
 import BarChartComponent from '../../components/BarChartComponent';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
+import { Fragment, useState } from 'react'
+import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { Demographic, DemographicInfos } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 
+const filters = [
+  {
+    id: 'gender',
+    name: 'Gender',
+    options: [
+      { label: 'Male', value: 'male', checked: false },
+      { label: 'Female', value: 'female', checked: false },
+    ],
+  },
+  {
+    id: 'age',
+    name: 'Age',
+    options: [
+      { label: '30 Below', value: 1, checked: false },
+      { label: '31-40', value: 2, checked: false },
+      { label: '41-50', value: 3, checked: false },
+      { label: '51 and Above', value: 4, checked: false },
+    ],
+  },
+  {
+    id: 'maritalStatus',
+    name: 'Marital Status',
+    options: [
+      { label: 'Single', value: 's', checked: false },
+      { label: 'Married', value: 'm', checked: false },
+      { label: 'Widowed', value: 'w', checked: false },
+      { label: 'Divorced', value: 'd', checked: false },
+    ],
+  },
+  {
+    id: 'qualification',
+    name: 'Qualification',
+    options: [
+      { label: 'PhD', value: 'Phd', checked: false },
+      { label: 'Master', value: 'MSc', checked: false },
+      { label: 'Bachelor', value: 'BSc', checked: false },
+      { label: 'Diploma', value: 'Dip', checked: false },
+      { label: 'SPM/STPM', value: 'SPM', checked: false },
+      { label: 'Other', value: 'other', checked: false },
+    ],
+  },
+  {
+    id: 'rank',
+    name: 'Rank',
+    options: [
+      { label: 'Col - Lt Col', value: 'Col', checked: false },
+      { label: 'Maj - Capt', value: 'Maj', checked: false },
+      { label: 'Enlisted Rank', value: 'Enl', checked: false },
+    ],
+  },
+  {
+    id: 'service',
+    name: 'Service',
+    options: [
+      { label: 'Malaysian Army', value: 'Mar', checked: false },
+      { label: 'Royal Malaysian Air Force (RMAF)', value: 'RMAF', checked: false },
+      { label: 'Royal Malaysian Navy (RMN)', value: 'RMN', checked: false },
+    ],
+  },
+  {
+    id: 'dutyArea',
+    name: 'Duty Area',
+    options: [
+      { label: 'Base/Formation', value: 'base', checked: false },
+      { label: 'Unit', value: 'unit', checked: false },
+      { label: 'Operations (Base)', value: 'Ops(base)', checked: false },
+      { label: 'Operations (Vessel)', value: 'Ops (vessel)', checked: false },
+      { label: 'Support', value: 'support', checked: false },
+      { label: 'Training', value: 'training' }
+    ],
+  },
+  {
+    id: 'locationDuty',
+    name: 'Location Duty',
+    options: [
+      { label: 'Alor Setar', value: 'str', checked: false },
+      { label: 'Butterworth', value: 'btr', checked: false },
+      { label: 'Perak', value: 'perak', checked: false },
+      { label: 'Pahang', value: 'pahang', checked: false },
+      { label: 'Selangor', value: 'slg', checked: false },
+      { label: 'Kuala Lumpur', value: '', checked: false },
+      { label: 'Labuan', value: 'lbn', checked: false },
+      { label: 'Sabah', value: 'sabh', checked: false },
+      { label: 'Sarawak', value: 'srk', checked: false },
+    ],
+  },
+  {
+    id: 'serviceYear',
+    name: 'Service Year',
+    options: [
+      { label: 'Below 10 Years', value: '1', checked: false },
+      { label: '11 - 15 Years', value: '2', checked: false },
+      { label: '16 - 20 Years', value: '3', checked: false },
+      { label: 'More than 21 Years', value: '4', checked: false },
+    ],
+  },
+  {
+    id: 'accomodation',
+    name: 'Accomodation',
+    options: [
+      { label: 'Mess/Wisma', value: 'asd', checked: false },
+      { label: 'Family Home', value: 'ad', checked: false },
+      { label: 'Rented House', value: 'add', checked: false },
+      { label: 'Owned House', value: 'dad', checked: false },
+    ],
+  },
+]
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function stats(props) {
-  if (props.access === true) {
-    const survey = props.survey;
-    const questions = props.questions;
+  const survey = props.survey;
+  const questions = props.questions;
+  const responses = props.responses;
 
-    const responses = props.responses;
+  console.log("responses")
+  console.log(responses)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
-    const responsesSimplified = responses.flat();
-
-    return (
-      <Layout username={props.user.username}>
-        <div >
-          <div>
-            <h1>{survey.title}</h1>
-
-            {questions.map((question) => {
-              return (
-                <div>
-                  <h2>{question.title}</h2>
-
-                  <BarChartComponent
-                    question={question}
-                    responses={responsesSimplified}
-                  />
-
-                </div>
-              );
-            })}
-
-
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-  if (props.user !== undefined) {
-    return (
-      <Layout username={props.user.username}>
-        <h3 style={{ color: '#f7fcfc' }}>
-          Sorry you have no access to this page.
-        </h3>
-      </Layout>
-    );
-  }
   return (
     <Layout>
-      <h3 style={{ color: '#f7fcfc' }}>
-        Sorry you have no access to this page.
-      </h3>
+      <div className="bg-white">
+        <div>
+          {/* Mobile filter dialog */}
+          <Transition.Root show={mobileFiltersOpen} as={Fragment}>
+            <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
+              <Transition.Child
+                as={Fragment}
+                enter="transition-opacity ease-linear duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="transition-opacity ease-linear duration-300"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-25" />
+              </Transition.Child>
+
+              <Transition.Child
+                as={Fragment}
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="translate-x-full"
+              >
+                <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
+                  <div className="px-4 flex items-center justify-between">
+                    <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                    <button
+                      type="button"
+                      className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
+                      onClick={() => setMobileFiltersOpen(false)}
+                    >
+                      <span className="sr-only">Close menu</span>
+                      <XIcon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  {/* Filters */}
+                  <form className="mt-4 border-t border-gray-200">
+                    <h3 className="sr-only">Categories</h3>
+
+
+                    {filters.map((section) => (
+                      <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
+                        {({ open }) => (
+                          <>
+                            <h3 className="-mx-2 -my-3 flow-root">
+                              <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
+                                <span className="font-medium text-gray-900">{section.name}</span>
+                                <span className="ml-6 flex items-center">
+                                  {open ? (
+                                    <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
+                                  ) : (
+                                    <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
+                                  )}
+                                </span>
+                              </Disclosure.Button>
+                            </h3>
+                            <Disclosure.Panel className="pt-6">
+                              <div className="space-y-6">
+                                {section.options.map((option, optionIdx) => (
+                                  <div key={option.value} className="flex items-center">
+                                    <input
+                                      id={`filter-mobile-${section.id}-${optionIdx}`}
+                                      name={`${section.id}[]`}
+                                      defaultValue={option.value}
+                                      type="checkbox"
+                                      defaultChecked={option.checked}
+                                      className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <label
+                                      htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                      className="ml-3 min-w-0 flex-1 text-gray-500"
+                                    >
+                                      {option.label}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </Disclosure.Panel>
+                          </>
+                        )}
+                      </Disclosure>
+                    ))}
+                  </form>
+                </div>
+              </Transition.Child>
+            </Dialog>
+          </Transition.Root>
+
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
+              <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
+
+              <div className="flex items-center">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Print
+                      <ChevronDownIcon
+                        className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+                </Menu>
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Export
+                      <ChevronDownIcon
+                        className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+                </Menu>
+
+
+                <button
+                  type="button"
+                  className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <span className="sr-only">Filters</span>
+                  <FilterIcon className="w-5 h-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            <section aria-labelledby="products-heading" className="pt-6 pb-24">
+              <h2 id="products-heading" className="sr-only">
+                Products
+              </h2>
+
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+                {/* Filters */}
+                <form className="hidden lg:block">
+                  <h3 className="sr-only">Categories</h3>
+
+                  {filters.map((section) => (
+                    <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">{section.name}</span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
+                                ) : (
+                                  <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <div className="space-y-4">
+                              {section.options.map((option, optionIdx) => (
+                                <div key={option.value} className="flex items-center">
+                                  <input
+                                    id={`filter-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    defaultValue={option.value}
+                                    type="checkbox"
+                                    defaultChecked={option.checked}
+                                    className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                  <label
+                                    htmlFor={`filter-${section.id}-${optionIdx}`}
+                                    className="ml-3 text-sm text-gray-600"
+                                  >
+                                    {option.label}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                  ))}
+                </form>
+
+                {/* Product grid */}
+                <div className="lg:col-span-3">
+                  {questions.map((question) => {
+                    return (
+                      <div>
+                        <h2>{question.title}</h2>
+
+                        <BarChartComponent
+                          question={question}
+                          responses={responses}
+                        />
+
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
     </Layout>
-  );
+  )
 }
+
 
 export async function getServerSideProps(context) {
   console.log("stats")
@@ -110,7 +394,7 @@ export async function getServerSideProps(context) {
 
     console.log("questions")
 
-    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses`, {
+    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses/`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
@@ -128,14 +412,17 @@ export async function getServerSideProps(context) {
 
     var res = await axios.get(`http://localhost:3080/api/v1/demographics`, {
       headers: { Authorization: `Bearer ${token}` },
+      params: { surveyId: survey.id }
     }
     )
 
-    var user = res.data
-    console.log(user)
+    var users = res.data
+    console.log("demographics")
+
+    console.log(users)
 
     return {
-      props: { access: true, slug, user, survey, questions, categories, subcategories },
+      props: { slug, users, survey, questions, categories, subcategories, responses },
     };
 
   } catch (e) {
@@ -147,102 +434,5 @@ export async function getServerSideProps(context) {
       },
     }
   }
-
-
-
-  try {
-    // var res = await axios.get(`http://localhost:3080/user`, {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // }
-    // )
-
-    const slug = context.query.slug;
-
-    const survey = await axios.get(`http://localhost:3080/api/v1/surveys`, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: { slug: slug }
-    }
-    )
-    if (survey === undefined) {
-      return { props: {} };
-    }
-
-    const questions = await axios.get(`http://localhost:3080/api/v1/questions`, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: { survey: survey.id }
-    })
-
-    // if (survey.userId === user.id) {
-    //   return {
-    //     props: { access: true, user, slug, survey, questions },
-    //   };
-    // } else return { props: { access: false, user } };
-  } catch (e) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
-  // const { session } = nextCookies(context);
-
-  // if (await isTokenValid(session)) {
-  // console.log('token valid');
-  //   const { getSessionByToken } = await import('../../util/databasea.ats');
-  //   const sessionByToken = await getSessionByToken(session);
-
-  //   const userId = sessionByToken.userId;
-  //   console.log('session.userId', sessionByToken.userId);
-
-  //   const { getUserById } = await import('../../util/databasea.ats');
-  //   const user = await getUserById(userId);
-  //   user.createdAt = JSON.stringify(user.createdAt);
-
-  //   const slug = context.query.slug;
-  //   const { getSurveyBySlug } = await import('../../util/databasea.ats');
-  //   const survey = await getSurveyBySlug(slug);
-
-  //   if (survey.userId === user.id) {
-  //     console.log('you have access');
-
-  //     const { getQuestionWhereSurveyIdIs } = await import(
-  //       '../../util/databasea.ats'
-  //     );
-
-  //     const questions = await getQuestionWhereSurveyIdIs(survey.id);
-
-  //     console.log('questions', questions);
-
-  //     const responsesByQuestions = await Promise.all(
-  //       questions.map(async (id) => {
-  //         const { getResponsesByQuestionId } = await import(
-  //           '../../util/databasea.ats'
-  //         );
-  //         const responses = await getResponsesByQuestionId(id.id);
-  //         return responses;
-  //       }),
-  //     );
-
-  //     console.log('asyncRes', responsesByQuestions);
-
-  //     return {
-  //       props: {
-  //         user,
-  //         survey,
-  //         questions,
-  //         responses: responsesByQuestions,
-  //         access: true,
-  //       },
-  //     };
-  //   }
-
-  //   return {
-  //     props: { user, access: false },
-  //   };
-  // }
-  return {
-    props: { access: false },
-  };
 }
+

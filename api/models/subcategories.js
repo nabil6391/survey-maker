@@ -19,7 +19,15 @@ const Subcategory = db.define('subcategories', {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
-  }
+  },
+  titleMy: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  itemOrder: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
 });
 
 module.exports = Subcategory;

@@ -4,6 +4,9 @@ exports.getAll = async (req, res, next) => {
   try {
     const options = {
       where: {},
+      order: [
+        ['itemOrder', 'ASC'],
+      ],
     };
 
     if (req.query.surveyId)
@@ -33,7 +36,9 @@ exports.createOne = async (req, res, next) => {
     const USER_MODEL = {
       surveyId: req.body.surveyId,
       categoryId: req.body.categoryId,
-      title: req.body.title
+      title: req.body.title,
+      titleMy: req.body.titleMy,
+      itemOrder: req.body.order,
     };
 
     try {
@@ -53,7 +58,9 @@ exports.updateOne = async (req, res, next) => {
     const USER_MODEL = {
       surveyId: req.body.surveyId,
       categoryId: req.body.categoryId,
-      title: req.body.title
+      title: req.body.title,
+      titleMy: req.body.titleMy,
+      itemOrder: req.body.order,
     };
 
     try {

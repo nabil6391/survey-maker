@@ -19,22 +19,18 @@ export type Category = {
   surveyId: number;
   createdAt: Date;
   title: string;
+  titleMy: string;
+  desc: string;
+  descMy: string;
 };
+
 export type SubCategory = {
   id: number;
   surveyId: number;
   categoryId: number;
   createdAt: Date;
   title: string;
-};
-
-export type SerializedSurvey = {
-  id: number;
-  userId: number;
-  createdAt: string;
-  title: string;
-  customSlug: string;
-  published: boolean;
+  titleMy: string;
 };
 
 export type Question = {
@@ -51,15 +47,8 @@ export type Question = {
 export type Response = {
   id: number;
   questionId: number;
+  userId: string;
+  surveyId: number;
   createdAt: string;
   responseValue: number;
-};
-
-export type ResponseInput = {
-  questionId: number;
-  responseValue: number;
-};
-
-export type QuestionId = {
-  questionId: number;
 };

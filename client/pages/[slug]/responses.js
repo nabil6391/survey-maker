@@ -8,14 +8,16 @@ import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 
-export default function stats(props) {
+export default function responses(props) {
   const survey = props.survey;
   const questions = props.questions;
 
   const responses = props.responses;
 
+  console.log("responses")
+  console.log(responses)
   return (
-    <Layout username={props.user.username}>
+    <Layout>
       <div >
         <div>
           <h1>{survey.title}</h1>
@@ -25,10 +27,10 @@ export default function stats(props) {
               <div>
                 <h2>{question.title}</h2>
 
-                {/* <BarChartComponent
+                <BarChartComponent
                   question={question}
                   responses={responses}
-                /> */}
+                />
 
               </div>
             );
@@ -89,7 +91,7 @@ export async function getServerSideProps(context) {
 
     console.log("questions")
 
-    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses`, {
+    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses/`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
@@ -111,13 +113,13 @@ export async function getServerSideProps(context) {
     }
     )
 
-    var user = res.data
+    var users = res.data
     console.log("demographics")
 
-    console.log(user)
+    console.log(users)
 
     return {
-      props: { access: true, slug, user, survey, questions, categories, subcategories },
+      props: { slug, users, survey, questions, categories, subcategories, responses },
     };
 
   } catch (e) {

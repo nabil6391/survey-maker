@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 export default function results() {
   const list = [
-    { value: -2, N: 2 },
+    { value: "asda", N: 2 },
     { value: -1, N: 3 },
     { value: 0, N: 10 },
     { value: 1, N: 3 },

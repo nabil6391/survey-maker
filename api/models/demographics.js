@@ -13,7 +13,7 @@ const Demographic = db.define('demographics', {
     allowNull: false
   },
   userId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     allowNull: false
   },
   gender: {
