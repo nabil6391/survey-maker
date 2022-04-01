@@ -2,6 +2,7 @@ import Layout from '../components/Layout.js';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { SERVER_URL } from './_app.js';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function Signup() {
       headers: { "content-type": "application/json" }
     }
 
-    const res = await axios.post(`http://localhost:3080/register`, payload, options)
+    const res = await axios.post(SERVER_URL + `/register`, payload, options)
       .then((response) => {
         if (response.status == 200) {
           // setUser(data.user)

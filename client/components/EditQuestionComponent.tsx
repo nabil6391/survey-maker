@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import questions from '../pages/questions';
+import { SERVER_URL } from '../pages/_app';
 import { Survey, Question } from '../util/types';
 
 export default function EditQuestionComponent(props: { question: Question, index: number }) {
@@ -15,7 +15,7 @@ export default function EditQuestionComponent(props: { question: Question, index
   const [titleMy, setTitleMy] = useState(question.title);
 
   async function onDelete() {
-    const response = await fetch('http://localhost:3080/api/v1/questions/' + questionId, {
+    const response = await fetch(SERVER_URL + '/api/v1/questions/' + questionId, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -25,7 +25,7 @@ export default function EditQuestionComponent(props: { question: Question, index
   }
 
   async function onSave() {
-    const response = await fetch('http://localhost:3080/api/v1/questions/' + questionId, {
+    const response = await fetch(SERVER_URL + '/api/v1/questions/' + questionId, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -46,7 +46,7 @@ export default function EditQuestionComponent(props: { question: Question, index
 
 
   async function onSubmitFunction() {
-    const response = await fetch('http://localhost:3080/api/v1/question/' + questionId, {
+    const response = await fetch(SERVER_URL + '/api/v1/question/' + questionId, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

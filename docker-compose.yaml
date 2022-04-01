@@ -2,9 +2,10 @@ version: '3.8'
 services:
   # nextjs-ui:
   #   build:
-  #     context: .
+  #     context: ./client
+  #     dockerfile: Dockerfile.dev
   #   ports:
-  #     - "3001:3001"
+  #     - "3000:3000"
   #   container_name: nextjs-ui
   #   stdin_open: true
   #   volumes:
@@ -13,7 +14,8 @@ services:
   node_backend:
     container_name: node-api
     build:
-      context: .
+      context: ./api
+      dockerfile: Dockerfile.dev
     ports:
       - "3080:3080"
     environment:

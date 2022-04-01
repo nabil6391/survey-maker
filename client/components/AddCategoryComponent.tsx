@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Survey } from '../util/types';
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, PlusCircleIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { Disclosure } from '@headlessui/react'
+import { SERVER_URL } from '../pages/_app';
 export default function AddCategoryComponent(props: { survey: Survey }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
@@ -11,7 +12,7 @@ export default function AddCategoryComponent(props: { survey: Survey }) {
   const [descMy, setDescMy] = useState('Description');
 
   async function onSubmitFunction() {
-    const response = await fetch('http://localhost:3080/api/v1/categories', {
+    const response = await fetch(SERVER_URL + '/api/v1/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -1,15 +1,25 @@
 import Layout from '../../components/Layout';
 import BarChartComponent from '../../components/BarChartComponent';
+import BarChartSubCategoryComponent from '../../components/BarChartSubCategoryComponent';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { Demographic, DemographicInfos } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
+import { Dialog, Disclosure, Menu, RadioGroup, Transition } from '@headlessui/react'
+import {
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from 'recharts';
+import { SERVER_URL } from '../_app';
 
 const filters = [
   {
@@ -126,11 +136,87 @@ function classNames(...classes) {
 export default function stats(props) {
   const survey = props.survey;
   const questions = props.questions;
+  const categories = props.categories;
+  const subcategories = props.subcategories;
   const responses = props.responses;
 
   console.log("responses")
   console.log(responses)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [selectedFilters, setSelectedFilters] = useState({})
+
+  var categoryValues = {}
+  var subCategoryValues = {}
+  var questionsMap = {}
+  var categoryCountsMap = {}
+  var subcategoryCountsMap = {}
+  var uniqueUsers = {}
+
+  for (var j = 0; j < questions.length; j++) {
+    var question = questions[j]
+    questionsMap[question.id] = question
+  }
+
+  for (var i = 0; i < responses.length; i++) {
+    var response = responses[i]
+    var question = questionsMap[response.questionId]
+    if (question) {
+      if (categoryValues[question.categoryId]) {
+        categoryValues[question.categoryId] = categoryValues[question.categoryId] + parseInt(response.responseValue)
+        categoryCountsMap[question.categoryId] = categoryCountsMap[question.categoryId] + 1
+      } else {
+        categoryValues[question.categoryId] = parseInt(response.responseValue)
+        categoryCountsMap[question.categoryId] = 1
+      }
+
+      if (subCategoryValues[question.subcategoryId]) {
+        subCategoryValues[question.subcategoryId] = subCategoryValues[question.subcategoryId] + parseInt(response.responseValue)
+        subcategoryCountsMap[question.subcategoryId] = subcategoryCountsMap[question.subcategoryId] + 1
+      } else {
+        subCategoryValues[question.subcategoryId] = parseInt(response.responseValue)
+        subcategoryCountsMap[question.subcategoryId] = 1
+      }
+    }
+  }
+
+  function updateFilter(questionId, responseValue) {
+    if (userData["responses"] == undefined) {
+      userData["responses"] = {}
+    }
+    userData["responses"][questionId] = responseValue
+    console.log(userData["responses"][questionId])
+    var newData = { ...userData }
+    setUserData(newData);
+  }
+
+  const data = categories.map((category) => {
+    var info = { name: category.title, x: categoryValues[category.id] / categoryCountsMap[category.id] }
+    return info
+  })
+
+  // const responseValues = responses.map((r) => {
+  //   if (r.questionId === question.id) {
+  //     return parseInt(r.responseValue);
+  //   }
+  // });
+
+  // const countOccurrences = (responseValues, value) =>
+  //   responseValues.reduce((a, v) => (v === value ? a + 1 : a), 0);
+  // const barChartData = [];
+
+  // // go through every possible value from min Value to MaxValue and count occurence each time:
+
+  // for (let step = 1; step <= 5; step++) {
+  //   const countByValue = {
+  //     value: step,
+  //     n: countOccurrences(responseValues, step),
+  //   };
+
+  //   barChartData.push(countByValue);
+  // }
+
+  console.log(categoryValues)
+  console.log(subCategoryValues)
 
   return (
     <Layout>
@@ -294,24 +380,25 @@ export default function stats(props) {
                           </h3>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-4">
-                              {section.options.map((option, optionIdx) => (
-                                <div key={option.value} className="flex items-center">
-                                  <input
-                                    id={`filter-${section.id}-${optionIdx}`}
-                                    name={`${section.id}[]`}
-                                    defaultValue={option.value}
-                                    type="checkbox"
-                                    defaultChecked={option.checked}
-                                    className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                  />
-                                  <label
-                                    htmlFor={`filter-${section.id}-${optionIdx}`}
-                                    className="ml-3 text-sm text-gray-600"
-                                  >
-                                    {option.label}
-                                  </label>
-                                </div>
-                              ))}
+                              <RadioGroup onChange={(e) => updateFilter(question.id, parseInt(e) + 1)} className="mt-4 flex mx-auto w-full">
+                                {section.options.map((option, index) => (
+                                  <RadioGroup.Option value={index} name={option} >
+                                    <input
+                                      name={`${section.id}[]`}
+                                      defaultValue={option.value}
+                                      type="checkbox"
+                                      defaultChecked={option.checked}
+                                      className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <label
+                                      className="ml-3 text-sm text-gray-600"
+                                    >
+                                      {option.label}
+                                    </label>
+                                  </RadioGroup.Option>
+                                ))}
+                              </RadioGroup>
+
                             </div>
                           </Disclosure.Panel>
                         </>
@@ -322,14 +409,27 @@ export default function stats(props) {
 
                 {/* Product grid */}
                 <div className="lg:col-span-3">
-                  {questions.map((question) => {
+                  <ResponsiveContainer width="100%" height={300}>
+                    <RadarChart height={500} width={500}
+                      outerRadius="80%" data={data}>
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="name" />
+                      <PolarRadiusAxis />
+                      <Radar dataKey="x" stroke="green"
+                        fill="green" fillOpacity={0.5} />
+                    </RadarChart>
+                  </ResponsiveContainer>
+
+                  SubCategory
+                  {subcategories.map((subcategory) => {
                     return (
                       <div>
-                        <h2>{question.title}</h2>
+                        <h2>{subcategory.title}</h2>
 
-                        <BarChartComponent
+                        <BarChartSubCategoryComponent
                           question={question}
                           responses={responses}
+                          subcategories={subcategories}
                         />
 
                       </div>
@@ -363,7 +463,7 @@ export async function getServerSideProps(context) {
 
     const slug = context.query.slug;
 
-    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+    const { data } = await axios.get(SERVER_URL + `/api/v1/surveys`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { slug: slug }
     }
@@ -375,26 +475,26 @@ export async function getServerSideProps(context) {
       return { props: {} };
     }
 
-    const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
+    const questionsres = await axios.get(SERVER_URL + `/api/v1/questions`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
     console.log("questions2")
 
-    const categoriesres = await axios.get(`http://localhost:3080/api/v1/categories`, {
+    const categoriesres = await axios.get(SERVER_URL + `/api/v1/categories`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
     console.log("questions1")
 
-    const subcategoriesres = await axios.get(`http://localhost:3080/api/v1/subcategories`, {
+    const subcategoriesres = await axios.get(SERVER_URL + `/api/v1/subcategories`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
 
     console.log("questions")
 
-    const responsesres = await axios.get(`http://localhost:3080/api/v1/responses/`, {
+    const responsesres = await axios.get(SERVER_URL + `/api/v1/responses/`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
@@ -410,7 +510,7 @@ export async function getServerSideProps(context) {
     console.log(subcategories)
     console.log(responses)
 
-    var res = await axios.get(`http://localhost:3080/api/v1/demographics`, {
+    var res = await axios.get(SERVER_URL + `/api/v1/demographics`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     }

@@ -37,7 +37,12 @@
     "util/databasea.ats",
     "../tailwind.config copy.js",
     "pages/index.jsx",
-    "components/Stepper.jsx"
+    "components/Stepper.jsx",
+    "pages/thanks.jsx",
+    "pages/signup.jsx",
+    "pages/results.jsx",
+    "pages/new.jsx",
+    "pages/login.jsx"
   ],
   "exclude": [
     "node_modules"

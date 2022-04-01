@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SERVER_URL } from '../pages/_app';
 import { SubCategory, Survey } from '../util/types';
 
 export default function AddQuestionComponent(props: { survey: Survey, subcategory: SubCategory }) {
@@ -6,7 +7,7 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
   const [title, setTitle] = useState('I found the content..');
 
   async function onSubmitFunction() {
-    const response = await fetch('http://localhost:3080/api/v1/questions', {
+    const response = await fetch(SERVER_URL + '/api/v1/questions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

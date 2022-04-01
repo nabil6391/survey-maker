@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthSession } from '../util/withAuth';
 import axios from 'axios';
+import { SERVER_URL } from './_app';
 
 export default function New(props) {
   const user = props.user;
@@ -17,7 +18,7 @@ export default function New(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const response = await fetch('http://localhost:3080/api/v1/surveys', {
+    const response = await fetch(SERVER_URL + '/api/v1/surveys', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -93,7 +94,7 @@ export async function getServerSideProps(ctx) {
   }
 
   try {
-    var res = await axios.get(`http://localhost:3080/user`, {
+    var res = await axios.get(SERVER_URL + `/user`, {
       headers: { Authorization: `Bearer ${token}` },
     }
     )

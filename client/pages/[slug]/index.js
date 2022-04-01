@@ -10,6 +10,7 @@ import { Demographic, DemographicInfos } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
+import { SERVER_URL } from '../_app';
 
 export default function slug(props) {
   console.log("slug started")
@@ -87,7 +88,7 @@ export default function slug(props) {
 
                 userData["surveyId"] = survey.id
                 userData["userId"] = userId
-                const response = await fetch('http://localhost:3080/api/v1/stats/' + survey.id, {
+                const response = await fetch(SERVER_URL + '/api/v1/stats/' + survey.id, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
@@ -169,8 +170,7 @@ export async function getServerSideProps(context) {
 
   try {
     const slug = context.query.slug;
-
-    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+    const { data } = await axios.get(SERVER_URL + `/api/v1/surveys`, {
       params: { slug: slug }
     }
     )
@@ -181,17 +181,17 @@ export async function getServerSideProps(context) {
       return { props: {} };
     }
 
-    const questionsres = await axios.get(`http://localhost:3080/api/v1/questions`, {
+    const questionsres = await axios.get(SERVER_URL + `/api/v1/questions`, {
       params: { surveyId: survey.id }
     })
     console.log("questions2")
 
-    const categoriesres = await axios.get(`http://localhost:3080/api/v1/categories`, {
+    const categoriesres = await axios.get(SERVER_URL + `/api/v1/categories`, {
       params: { surveyId: survey.id }
     })
     console.log("questions1")
 
-    const subcategoriesres = await axios.get(`http://localhost:3080/api/v1/subcategories`, {
+    const subcategoriesres = await axios.get(SERVER_URL + `/api/v1/subcategories`, {
       params: { surveyId: survey.id }
     })
 

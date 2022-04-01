@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Survey, Question, Category } from '../util/types';
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, PlusCircleIcon, ViewGridIcon, PencilIcon, PencilAltIcon } from '@heroicons/react/solid'
 import { Disclosure } from '@headlessui/react'
+import { SERVER_URL } from '../pages/_app';
 
 export default function EditQuestionComponent(props: { question: Category, index: number }) {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function EditQuestionComponent(props: { question: Category, index
   const [descMy, setDescMy] = useState('Description');
 
   async function onDelete() {
-    const response = await fetch('http://localhost:3080/api/v1/subcategories/' + questionId, {
+    const response = await fetch(SERVER_URL + '/api/v1/subcategories/' + questionId, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -29,7 +30,7 @@ export default function EditQuestionComponent(props: { question: Category, index
   }
 
   async function onSave() {
-    const response = await fetch('http://localhost:3080/api/v1/subcategories/' + questionId, {
+    const response = await fetch(SERVER_URL + '/api/v1/subcategories/' + questionId, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

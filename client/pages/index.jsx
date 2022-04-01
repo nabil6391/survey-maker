@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getAuthSession } from '../util/withAuth';
 import axios from 'axios';
 
+import { SERVER_URL } from "./_app";
 
 export default function Home(props) {
   console.log(props.user)
@@ -25,12 +26,42 @@ export default function Home(props) {
             props.surveys.length == 0 ? <p>Nothing Available</p> : props.surveys.map((survey) => {
               return (
                 <div>
-                  <p>{survey.title}</p>
-                  <p>{survey.id}  <Link href={"/" + survey.slug + "/edit"} >
-                    <a>
-                      <button>Edit</button>
-                    </a>
-                  </Link></p>
+                  <h1>{survey.title}</h1>
+
+                  <div className=" px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+
+                    <Link href={"/" + survey.slug + "/edit"} >
+                      <a>
+                        <button
+                          type="button"
+                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                        >
+                          Edit
+                        </button>
+                      </a>
+                    </Link>
+                    <Link href={"/" + survey.slug + "/stats"} >
+                      <a>
+                        <button
+                          type="button"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        >
+                          View Stats
+                        </button>
+                      </a>
+                    </Link>
+                    <Link href={"/" + survey.slug + "/responses"} >
+                      <a>
+                        <button
+                          type="button"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        >
+                          View Responses
+                        </button>
+                      </a>
+                    </Link>
+
+                  </div>
 
                 </div>
               );
@@ -41,7 +72,9 @@ export default function Home(props) {
         <div className="max-w-lg mx-auto text-center mt-12 mb-6">
           <Link href="/new">
             <a>
-              <button>+ New Survey</button>
+              <button
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+              >+ New Survey</button>
             </a>
           </Link>
         </div>
@@ -69,7 +102,7 @@ export async function getServerSideProps(context) {
 
     const slug = context.query.slug;
 
-    const { data } = await axios.get(`http://localhost:3080/api/v1/surveys`, {
+    const { data } = await axios.get(SERVER_URL + `/api/v1/surveys`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { slug: slug }
     }
@@ -78,7 +111,7 @@ export async function getServerSideProps(context) {
     console.log(data)
     var surveys = data
 
-    var res = await axios.get(`http://localhost:3080/user`, {
+    var res = await axios.get(SERVER_URL + `/user`, {
       headers: { Authorization: `Bearer ${token}` },
     }
     )

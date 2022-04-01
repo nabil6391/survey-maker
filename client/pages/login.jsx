@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useAuth } from "../util/authProvider";
 import axios from 'axios';
+import { SERVER_URL } from "./_app";
 
 const login = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ const login = () => {
     const options = {
       headers: { "content-type": "application/json" }
     }
-    axios.defaults.baseURL = 'http://localhost:3080/'
+    axios.defaults.baseURL = SERVER_URL
 
     const res = await axios
       .post(`/login`, payload, options)
