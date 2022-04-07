@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { useAuth } from "../util/authProvider";
 import axios from 'axios';
 import { SERVER_URL } from "./_app";
+import { getAuthSession } from "../util/withAuth";
 
 const login = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,17 @@ const login = () => {
       headers: { "content-type": "application/json" }
     }
     axios.defaults.baseURL = SERVER_URL
+
+    // const token = await getAuthSession(context);
+
+    // if (token) {
+    //   return {
+    //     redirect: {
+    //       destination: '/',
+    //       permanent: false,
+    //     },
+    //   }
+    // }
 
     const res = await axios
       .post(`/login`, payload, options)
@@ -63,7 +75,8 @@ const login = () => {
       })
       .catch((err) => {
         console.log(err)
-        setError(err.response.data.message)
+        // setError(err.response.data.message)
+        setError(err.response)
       });
   };
 

@@ -37,12 +37,12 @@ export default function CategorySubSection(props) {
                                     return (
                                         <div className='bg-white p-5 rounded-xl my-5' key={question.id}>
                                             {question.title}
-                                            <div className="flex mx-auto w-full">
+                                            <div className="flex mx-auto w-full justify-center">
                                                 <div className="my-auto">Disagree</div>
-                                                <RadioGroup value={questionValue[question.id]} onChange={(e) => updateResponseValues(question.id, parseInt(e) + 1)} className="mt-4 flex mx-auto w-full">
+                                                <RadioGroup className="px-4 flex" value={questionValue[question.id]} onChange={(e) => updateResponseValues(question.id, parseInt(e) + 1)}>
                                                     {answers.map((name, index) => (
                                                         <RadioGroup.Option value={index} name={name} >
-                                                            <label className="p-2" key={"q" + index}>
+                                                            <label className="p-10" key={"q" + index}>
                                                                 <div className="p-2">{index + 1}</div>
                                                                 <div><input
                                                                     className="m-2"

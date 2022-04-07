@@ -18,10 +18,16 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  Line,
+  CartesianGrid,
+  Pie,
+  PieChart,
+  Cell,
 } from 'recharts';
 import { SERVER_URL } from '../_app';
+const barColors = ["#1f77b4", "#ff7f0e", "#2ca02c"]
 
-const filters = [
+export const filters = [
   {
     id: 'gender',
     name: 'Gender',
@@ -139,26 +145,87 @@ export default function stats(props) {
   const categories = props.categories;
   const subcategories = props.subcategories;
   const responses = props.responses;
+  const users = props.users;
 
   console.log("responses")
   console.log(responses)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState({})
 
+  function goToThanks() {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  function updateFilter(e) {
+    console.log(e)
+  }
+
   var categoryValues = {}
   var subCategoryValues = {}
   var questionsMap = {}
   var categoryCountsMap = {}
   var subcategoryCountsMap = {}
-  var uniqueUsers = {}
+  var uniqueUsers = []
+  var selectedUserData = {}
+
+  filters.forEach((filter) => {
+    selectedUserData[filter.id] = {}
+    filter.options.forEach((option) => {
+      selectedUserData[filter.id][option.value] = 0
+    })
+  })
+
+  for (var j = 0; j < users.length; j++) {
+    var user = users[j]
+
+    filters.forEach((filter) => {
+      if (user[filter.id]) {
+        if (selectedFilters[filter.id]) {
+          if (!selectedFilters[filter.id].includes(user[filter.id])) {
+            selectedFilters[filter.id].push(user[filter.id])
+          }
+          selectedUserData[filter.id][user[filter.id]] = selectedUserData[filter.id][user[filter.id]] + 1
+        } else {
+          selectedFilters[filter.id] = [user[filter.id]]
+          selectedUserData[filter.id][user[filter.id]] = 1
+        }
+      }
+
+    })
+
+
+    //   const handleSelect = technology => {
+    //     const isSelected = selectedTechnologies.includes(technology);
+    //     /* If the option has already been selected, we remove it from the array. */
+    // ‍
+    //     /* Otherwise, we add it. */ 
+    // ‍
+    //     const newSelection = isSelected
+    //     ? selectedTechnologies.filter(currentTech => currentTech !== technology)
+    //     : [...selectedTechnologies, technology];
+    //   setSelectedTechnologies(newSelection);};
+
+  }
 
   for (var j = 0; j < questions.length; j++) {
     var question = questions[j]
     questionsMap[question.id] = question
   }
 
+
+
   for (var i = 0; i < responses.length; i++) {
     var response = responses[i]
+
+    if (!uniqueUsers.includes(response.userId)) {
+      uniqueUsers.push(response.userId)
+    }
+
     var question = questionsMap[response.questionId]
     if (question) {
       if (categoryValues[question.categoryId]) {
@@ -179,17 +246,9 @@ export default function stats(props) {
     }
   }
 
-  function updateFilter(questionId, responseValue) {
-    if (userData["responses"] == undefined) {
-      userData["responses"] = {}
-    }
-    userData["responses"][questionId] = responseValue
-    console.log(userData["responses"][questionId])
-    var newData = { ...userData }
-    setUserData(newData);
-  }
 
-  const data = categories.map((category) => {
+
+  const categorySpiperData = categories.map((category) => {
     var info = { name: category.title, x: categoryValues[category.id] / categoryCountsMap[category.id] }
     return info
   })
@@ -313,11 +372,11 @@ export default function stats(props) {
           </Transition.Root>
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
+            <div className="relative z-10 flex items-baseline justify-between pt-6 pb-6 border-b border-gray-200">
               <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
 
               <div className="flex items-center">
-                <Menu as="div" className="relative inline-block text-left">
+                {/* <Menu as="div" className="relative inline-block text-left">
                   <div>
                     <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                       Print
@@ -327,10 +386,10 @@ export default function stats(props) {
                       />
                     </Menu.Button>
                   </div>
-                </Menu>
+                </Menu> */}
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900" >
                       Export
                       <ChevronDownIcon
                         className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
@@ -362,13 +421,13 @@ export default function stats(props) {
                 <form className="hidden lg:block">
                   <h3 className="sr-only">Categories</h3>
 
-                  {filters.map((section) => (
-                    <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                  {filters.map((filter) => (
+                    <Disclosure as="div" key={filter.id} className="border-b border-gray-200 py-6">
                       {({ open }) => (
                         <>
                           <h3 className="-my-3 flow-root">
                             <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">{section.name}</span>
+                              <span className="font-medium text-gray-900">{filter.name}</span>
                               <span className="ml-6 flex items-center">
                                 {open ? (
                                   <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
@@ -380,14 +439,14 @@ export default function stats(props) {
                           </h3>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-4">
-                              <RadioGroup onChange={(e) => updateFilter(question.id, parseInt(e) + 1)} className="mt-4 flex mx-auto w-full">
-                                {section.options.map((option, index) => (
+                              <RadioGroup onChange={(e) => updateFilter(e)} className="mt-4 flex mx-auto w-full">
+                                {filter.options.map((option, index) => (
                                   <RadioGroup.Option value={index} name={option} >
                                     <input
-                                      name={`${section.id}[]`}
-                                      defaultValue={option.value}
+                                      name={`${filter.id}[]`}
+                                      value={option.value}
                                       type="checkbox"
-                                      defaultChecked={option.checked}
+                                      // checked={selectedUserData[filter.id].includes(option.value)}
                                       className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                     />
                                     <label
@@ -409,9 +468,68 @@ export default function stats(props) {
 
                 {/* Product grid */}
                 <div className="lg:col-span-3">
+
+                  {JSON.stringify(selectedFilters)}
+                  <br></br>
+                  <br></br>
+                  {JSON.stringify(selectedUserData)}
+                  <br></br>
+                  <br></br>
+                  {filters.map((filter) => {
+                    var barChartData = Object.entries(selectedUserData[filter.id]).map((e) => {
+                      return {
+                        value: e[0],
+                        count: e[1],
+                      }
+                    }
+                    )
+
+                    return (
+                      <div>
+                        <h2>{filter.name}</h2>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart
+                            data={barChartData}
+                            margin={{ top: 10, right: 10, left: 10, bottom: 50 }}
+                          >
+                            <XAxis dataKey="value" />
+
+                            {/* <YAxis /> */}
+                            <Tooltip />
+
+                            <Bar dataKey="count" fill="#30CDCD" >
+                              {
+                                barChartData.map((entry, index) => {
+                                  return <Cell fill={barColors[index]} />;
+                                })
+                              }
+                            </Bar>
+                          </BarChart>
+
+                        </ResponsiveContainer>
+
+                        <br></br>
+
+                        <PieChart width={730} height={250}>
+                          <Legend verticalAlign="top" height={36} />
+                          <Tooltip />
+                          <Pie data={barChartData} dataKey="count" nameKey="value" fill="#8884d8" >
+                            {
+                              barChartData.map((entry, index) => {
+                                return <Cell fill={barColors[index]} />;
+                              })
+                            }
+                          </Pie>
+
+                        </PieChart>
+                      </div>
+                    );
+                  })}
+
+
                   <ResponsiveContainer width="100%" height={300}>
                     <RadarChart height={500} width={500}
-                      outerRadius="80%" data={data}>
+                      outerRadius="80%" data={categorySpiperData}>
                       <PolarGrid />
                       <PolarAngleAxis dataKey="name" />
                       <PolarRadiusAxis />
@@ -441,7 +559,7 @@ export default function stats(props) {
           </main>
         </div>
       </div>
-    </Layout>
+    </Layout >
   )
 }
 

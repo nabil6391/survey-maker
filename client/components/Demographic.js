@@ -104,12 +104,12 @@ export function Demographic() {
             </div> */}
 
             {Object.entries(DemographicInfos).map(([e, v]) => {
-                return <div className="mt-10">
+                return <div className="mt-3">
                     <div className="flex items-center justify-between">
                         <h4 className="text-sm text-gray-900 font-medium">{e.toUpperCase()}</h4>
                     </div>
 
-                    <RadioGroup value={userData[e]} onChange={a => handleChange(a, e)} className="mt-4 ">
+                    <RadioGroup value={userData[e]} onChange={a => handleChange(a, e)} className="mt-2 ">
                         <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
                         <div className="grid grid-cols-4 gap-4">
                             {v.map((size) => (

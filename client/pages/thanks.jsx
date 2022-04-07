@@ -6,74 +6,16 @@ export default function thanks(props) {
 
   return (
     <Layout>
-      <div >
-        <form
-        >
-          <h1>Thanks :) </h1>
-          <img alt="" src="logo-black.svg" />
-          <h3>Let's keep in touch.</h3>
-          <h4>You can find me an my projects on</h4>
-          <div>
-            <button
-              onClick={(e) => {
-                window.open(
-                  'https://www.linkedin.com/in/judith-kuneth',
-                  '_blank',
-                );
-              }}
-              style={{
-                color: '#f7fcfc',
-                backgroundColor: '#30CDCD',
-                width: '120px',
-                borderColor: '#30CDCD',
-                fontSize: '16px',
-                fontWeight: '500',
-              }}
-            >
-              Linkedin
-            </button>
-            <button
-              onClick={(e) => {
-                window.open('https://www.github.com/judithkuneth', '_blank');
-              }}
-              style={{
-                color: '#30CDCD',
-                backgroundColor: '#f7fcfc',
-                width: '120px',
-                borderStyle: 'solid',
-                borderColor: '#30CDCD',
-                fontSize: '16px',
-                fontWeight: '500',
-              }}
-            >
-              Github
-            </button>
-          </div>
-        </form>
+      <div className="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <h1>Thank you for submitting </h1>
+        <h3>Let's keep in touch.</h3>
+        <h4>You can contact us at asf@gmail.com</h4>
       </div>
     </Layout>
   );
 }
 
 export async function getServerSideProps(context) {
-  const slug = context.query.slug;
-  // const { session } = nextCookies(context);
-
-  // /* console.log('check', await isTokenValid(session)); */
-
-  // if (await isTokenValid(session)) {
-  //   /* console.log('token valid'); */
-  //   const { auth } = useAuth()
-
-  //   const user = auth.user
-  //   return {
-  //     props: {
-  //       user,
-  //       loggedIn: true,
-  //     },
-  //   };
-  // }
-
 
   return {
     props: {
