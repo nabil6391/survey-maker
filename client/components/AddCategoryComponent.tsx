@@ -3,7 +3,7 @@ import { Survey } from '../util/types';
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, PlusCircleIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { Disclosure } from '@headlessui/react'
 import { SERVER_URL } from '../pages/_app';
-export default function AddCategoryComponent(props: { survey: Survey }) {
+export default function AddCategoryComponent(props: { survey: Survey, index: number }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
   const [titleMy, setTitleMy] = useState('Title');
@@ -19,7 +19,7 @@ export default function AddCategoryComponent(props: { survey: Survey }) {
         surveyId: surveyId,
         title: title,
         titleMy: titleMy,
-        order: 1,
+        order: props.index,
         desc: desc,
         descMy: descMy,
       }),

@@ -10,12 +10,13 @@ import {
 
 export default function BarChartComponent(props) {
   const responses = props.responses;
-  const question = props.question;
+  const subcategory = props.subcategory;
+  const questionsMap = props.questionsMap;
 
-  const responseValues = responses.map((r) => {
-    if (r.questionId === question.id) {
-      return parseInt(r.responseValue);
-    }
+  const status = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+
+  const responseValues = responses.filter((e) => questionsMap[e.questionId].subcategoryId == subcategory.id).map((r) => {
+    return parseInt(r.responseValue);
   });
 
   const countOccurrences = (responseValues, value) =>
@@ -23,29 +24,27 @@ export default function BarChartComponent(props) {
 
   const barChartData = [];
 
-  // go through every possible value from min Value to MaxValue and count occurence each time:
-
   for (let step = 1; step <= 5; step++) {
     const countByValue = {
-      value: step,
+      value: status[step - 1],
       n: countOccurrences(responseValues, step),
     };
 
     barChartData.push(countByValue);
   }
 
-  return (
-    <ResponsiveContainer width="100%" height={300}>
+  return <>
+    <ResponsiveContainer width={600} height={400}>
       <BarChart
         data={barChartData}
         margin={{ top: 10, right: 10, left: 10, bottom: 50 }}
       >
-        <XAxis dataKey="value" />
+        <XAxis dataKey="value" width={10} height={12} interval={0} />
 
         <Tooltip />
 
         <Bar dataKey="n" fill="#30CDCD" />
       </BarChart>
     </ResponsiveContainer>
-  );
+  </>
 }

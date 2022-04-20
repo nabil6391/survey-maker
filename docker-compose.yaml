@@ -11,6 +11,17 @@ services:
   #   volumes:
   #     - ./client:/usr/src/app/client
   #     - /usr/src/app/client/node_modules
+  node_db:
+    container_name: node_db
+    image: postgres:14.1-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=nabil
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=pg_db
+    volumes:
+      - db:/var/lib/postgresql/data
   node_backend:
     container_name: node-api
     build:
@@ -33,17 +44,6 @@ services:
       - /usr/src/app/api/node_modules/bcrypt
     depends_on:
       - node_db
-  node_db:
-    container_name: node_db
-    image: postgres:14.1-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=nabil
-      - POSTGRES_PASSWORD=12345
-      - POSTGRES_DB=pg_db
-    volumes:
-      - db:/var/lib/postgresql/data
 
 volumes:
   db:

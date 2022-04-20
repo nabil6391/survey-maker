@@ -14,12 +14,3 @@ export default function thanks(props) {
     </Layout>
   );
 }
-
-export async function getServerSideProps(context) {
-
-  return {
-    props: {
-      loggedIn: false,
-    },
-  };
-}

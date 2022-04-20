@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SERVER_URL } from '../pages/_app';
 import { Category, Survey } from '../util/types';
 
-export default function AddSubCategoryComponent(props: { survey: Survey, category: Category }) {
+export default function AddSubCategoryComponent(props: { survey: Survey, category: Category, index: number }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
   const [titleMy, setTitleMy] = useState('I found the content..');
@@ -16,7 +16,7 @@ export default function AddSubCategoryComponent(props: { survey: Survey, categor
         categoryId: props.category.id,
         title: title,
         titleMy: titleMy,
-        order: 1,
+        order: props.index,
       }),
     });
     if (response.status == 201) {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SERVER_URL } from '../pages/_app';
 import { SubCategory, Survey } from '../util/types';
 
-export default function AddQuestionComponent(props: { survey: Survey, subcategory: SubCategory }) {
+export default function AddQuestionComponent(props: { survey: Survey, subcategory: SubCategory, index: number }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
 
@@ -14,7 +14,7 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
         surveyId: surveyId,
         categoryId: props.subcategory.categoryId,
         subcategoryId: props.subcategory.id,
-        order: 1,
+        order: props.index,
         title: title,
         titleMy: title,
       }),

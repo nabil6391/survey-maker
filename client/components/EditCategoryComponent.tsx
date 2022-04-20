@@ -7,7 +7,7 @@ import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, PlusCircleIcon, V
 import { Disclosure } from '@headlessui/react'
 import { SERVER_URL } from '../pages/_app';
 
-export default function EditQuestionComponent(props: { question: Category, index: number }) {
+export default function EditCategoryComponent(props: { question: Category, index: number }) {
   const router = useRouter();
   const question = props.question;
 

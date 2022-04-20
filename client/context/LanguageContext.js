@@ -1,56 +1,22 @@
-import React, { createContext } from 'react';
-import router from 'next/router';
-const AuthContext = createContext();
+import { createContext, useContext, useState } from "react";
 
-export const AuthProvider = (props) => {
-    const auth = props.myAuth || { status: 'SIGNED_OUT', user: null };
+const LanguageContext = createContext({ language: "en", setLanguage: null });
 
-    const login = async (email, password) => {
-        return await fetch({
-            method: 'post',
-            url: `login`,
-            data: { email, password },
-            withCredentials: true,
-        })
-            .then(() => {
-                router.push('/');
-                console.log('user signed in');
-            })
-            .catch((error) => {
-                console.error('Incorrect email or password entered.');
-            });
-    };
-    const register = async (name, email, password) => {
-        return await fetch(`/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, email: email, password: password })
-        })
-            .then(function (response) {
-                router.push('/');
-                console.log('user registered');
-            })
-            .catch(function (error) {
-                console.error(error.message);
-            });
-    };
-    const logout = async () => {
-        return await axios
-            .get(`/logout`, { withCredentials: true })
-            .then(() => {
-                router.push('/');
-                console.log('user logged out');
-            })
-            .catch((error) => {
-                console.error(error.message);
-            });
-    };
-    return <AuthContext.Provider value={{ auth, logout, register, login }} {...props} />;
-};
+export function UseLanguageProvider({ children }) {
+    const [language, setLanguage] = useState("en");
 
+    return (
+        <LanguageContext.Provider value={{ language, setLanguage }}>
+            {children}
+        </LanguageContext.Provider>
+    );
+}
 
-export const useAuth = () => React.useContext(AuthContext);
-export const AuthConsumer = AuthContext.Consumer;
+export function useLanguageContext() {
+    const { language, setLanguage } = useContext(LanguageContext);
+
+    return { language, setLanguage };
+}
 
 export const filters = [
     {
@@ -169,3 +135,8 @@ export const filters = [
         ],
     },
 ]
+
+export let filterName = (filter) => useContext(LanguageContext).language == "en" ? filter.name : filter.nameMy
+export let optionName = (filter) => useContext(LanguageContext).language == "en" ? filter.label : filter.labelMy
+export let categoryTitle = (filter) => useContext(LanguageContext).language == "en" ? filter.title : filter.titleMy
+export let subcategoryTitle = (filter) => useContext(LanguageContext).language == "en" ? filter.title : filter.titleMy

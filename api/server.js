@@ -43,12 +43,12 @@ const Category = require('./models/categories');
 const SubCategory = require('./models/subcategories');
 const { Op } = require('sequelize');
 
-Response.belongsTo(Question)
-SubCategory.belongsTo(Category)
-Category.belongsTo(Survey)
-Question.belongsTo(Survey)
-Question.belongsTo(SubCategory)
-Question.belongsTo(Category)
+Response.belongsTo(Question, { onDelete: 'cascade' })
+SubCategory.belongsTo(Category, { onDelete: 'cascade' })
+Category.belongsTo(Survey, { onDelete: 'cascade' })
+Question.belongsTo(Survey, { onDelete: 'cascade' })
+Question.belongsTo(SubCategory, { onDelete: 'cascade' })
+Question.belongsTo(Category, { onDelete: 'cascade' })
 
 app.get("/api/v1/stats/:id", async (req, res, next) => {
   try {
@@ -236,7 +236,7 @@ app.post("/logout", (req, res, next) => {
 (async () => {
   try {
     await sequelize.sync();
-    console.log("sync started");
+    console.log("sync startd");
     app.listen(process.env.EXTERNAL_PORT || 3080);
   } catch (error) {
     console.error(error);

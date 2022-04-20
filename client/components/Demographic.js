@@ -1,74 +1,6 @@
 import { useStepperContext } from "../context/StepperContext";
-import { Dialog, RadioGroup, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-
-export const DemographicInfos = {
-    gender: [
-        { name: 'Male', value: 'male' },
-        { name: 'Female', value: 'female' }
-    ],
-    age: [
-        { name: '30 Below', value: 1 },
-        { name: '31-40', value: 2 },
-        { name: '41-50', value: 3 },
-        { name: '51 and Above', value: 4 },
-    ],
-    maritalStatus: [
-        { name: 'Single', value: 's' },
-        { name: 'Married', value: 'm' },
-        { name: 'Widowed', value: 'w' },
-        { name: 'Divorced', value: 'd' },
-    ],
-    qualification: [
-        { name: 'PhD', value: 'Phd' },
-        { name: 'Master', value: 'MSc' },
-        { name: 'Bachelor', value: 'BSc' },
-        { name: 'Diploma', value: 'Dip' },
-        { name: 'SPM/STPM', value: 'SPM' },
-        { name: 'Other', value: 'other' },
-    ],
-    rank: [
-        { name: 'Col - Lt Col', value: 'Col' },
-        { name: 'Maj - Capt', value: 'Maj' },
-        { name: 'Enlisted Rank', value: 'Enl' },
-    ],
-    service: [
-        { name: 'Malaysian Army', value: 'Mar' },
-        { name: 'Royal Malaysian Air Force (RMAF)', value: 'RMAF' },
-        { name: 'Royal Malaysian Navy (RMN)', value: 'RMN' },
-    ],
-    dutyArea: [
-        { name: 'Base/Formation', value: 'base' },
-        { name: 'Unit', value: 'unit' },
-        { name: 'Operations (Base)', value: 'Ops(base)' },
-        { name: 'Operations (Vessel)', value: 'Ops (vessel)' },
-        { name: 'Support', value: 'support' },
-        { name: 'Training', value: 'training' }
-    ],
-    locationDuty: [
-        { name: 'Alor Setar', value: 'str' },
-        { name: 'Butterworth', value: 'btr' },
-        { name: 'Perak', value: 'perak' },
-        { name: 'Pahang', value: 'pahang' },
-        { name: 'Selangor', value: 'slg' },
-        { name: 'Kuala Lumpur', value: '' },
-        { name: 'Labuan', value: 'lbn' },
-        { name: 'Sabah', value: 'sabh' },
-        { name: 'Sarawak', value: 'srk' },
-    ],
-    serviceYear: [
-        { name: 'Below 10 Years', value: '1' },
-        { name: '11 - 15 Years', value: '2' },
-        { name: '16 - 20 Years', value: '3' },
-        { name: 'More than 21 Years', value: '4' },
-    ],
-    accomodation: [
-        { name: 'Mess/Wisma', value: 'asd' },
-        { name: 'Family Home', value: 'ad' },
-        { name: 'Rented House', value: 'add' },
-        { name: 'Owned House', value: 'dad' },
-    ]
-}
+import { RadioGroup } from '@headlessui/react'
+import { filters, filterName, optionName, categoryTitle, subcategoryTitle } from '../context/LanguageContext'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -103,19 +35,18 @@ export function Demographic() {
                 </form>
             </div> */}
 
-            {Object.entries(DemographicInfos).map(([e, v]) => {
+            {filters.map((filter) => {
                 return <div className="mt-3">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-sm text-gray-900 font-medium">{e.toUpperCase()}</h4>
+                        <h4 className="text-sm text-gray-900 font-medium">{filterName(filter)}</h4>
                     </div>
 
-                    <RadioGroup value={userData[e]} onChange={a => handleChange(a, e)} className="mt-2 ">
-                        <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
+                    <RadioGroup value={userData[filter.id]} onChange={option => handleChange(option.value, filter.id)} className="mt-2 ">
                         <div className="grid grid-cols-4 gap-4">
-                            {v.map((size) => (
+                            {filter.options.map((option) => (
                                 <RadioGroup.Option
-                                    value={size.value}
-                                    name={e}
+                                    value={option}
+                                    name={optionName(option)}
                                     className={({ active, checked }) =>
                                         classNames(
                                             'bg-white shadow-sm text-gray-900 cursor-pointer',
@@ -125,7 +56,7 @@ export function Demographic() {
                                         )
                                     }
                                 >
-                                    <RadioGroup.Label as="p">{size.name}</RadioGroup.Label>
+                                    <RadioGroup.Label as="p">{optionName(option)}</RadioGroup.Label>
                                 </RadioGroup.Option>
                             ))}
                         </div>

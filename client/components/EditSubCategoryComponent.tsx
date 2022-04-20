@@ -68,7 +68,6 @@ export default function EditQuestionComponent(props: { question: Category, index
             </h3>
             <Disclosure.Panel className="text-gray-500 py-5">
 
-
               <div className="col-span-6 sm:col-span-3">
                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
                   Title In English

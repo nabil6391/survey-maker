@@ -31,7 +31,8 @@ exports.createOne = async (req, res, next) => {
       userId: req.body.userId,
       title: req.body.title,
       slug: req.body.slug,
-      title_my: req.body.title
+      title_my: req.body.title,
+      status: 0
     };
 
     try {

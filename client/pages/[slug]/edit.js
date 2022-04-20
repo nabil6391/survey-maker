@@ -203,16 +203,16 @@ export default function dashboard(props) {
                                         </div>
                                       );
                                     })}
-                                    <AddQuestionComponent survey={survey} subcategory={subcategory} />
+                                    <AddQuestionComponent survey={survey} subcategory={subcategory} index={questions.filter(question => question.subcategoryId == subcategory.id).length + 1} />
                                   </div>
                                 );
                               })}
-                              <AddSubCategoryComponent survey={survey} category={category} />
+                              <AddSubCategoryComponent survey={survey} category={category} index={subcategories.filter(sc => sc.categoryId == category.id).length + 1} />
                             </div>
                           );
                         })
                       }
-                      <AddCategoryComponent survey={survey} />
+                      <AddCategoryComponent survey={survey} index={categories.length + 1} />
                       {(
                         <div className='rounded-xl p-5 max-w-2xl mx-auto'>
                           <button
@@ -265,7 +265,7 @@ export async function getServerSideProps(context) {
       params: { slug: slug }
     }
     )
-    console.log("response")
+    console.log("responses")
     console.log(data)
     var survey = data[0]
     if (survey === undefined) {
@@ -276,13 +276,11 @@ export async function getServerSideProps(context) {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
-    console.log("questions2")
 
     const categoriesres = await axios.get(SERVER_URL + `/api/v1/categories`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
-    console.log("questions1")
 
     const subcategoriesres = await axios.get(SERVER_URL + `/api/v1/subcategories`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -295,7 +293,10 @@ export async function getServerSideProps(context) {
     var categories = categoriesres.data
     var subcategories = subcategoriesres.data
     console.log(questions)
+    console.log("cats")
+
     console.log(categories)
+    console.log("subcats")
     console.log(subcategories)
 
     var res = await axios.get(SERVER_URL + `/user`, {

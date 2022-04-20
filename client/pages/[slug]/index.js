@@ -24,22 +24,12 @@ export default function slug(props) {
     );
   }
 
-
   function goToThanks() {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
+    showProjectDetails(true)
   }
 
   function closeModal() {
     setErrorMessage("")
-  }
-
-  function openModal() {
-    setIsOpen(true)
   }
 
   const survey = props.survey;
@@ -47,13 +37,104 @@ export default function slug(props) {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
-
-  let [consent, setConsent] = useState(true)
+  const [projectDetails, showProjectDetails] = useState(false);
+  const [consent, setConsent] = useState(false)
 
   if (!consent) {
     return <div className='p-5 max-w-4xl mx-auto'>
-      <YoutubeEmbed embedId="Ra5n4bjFO0g" />
-      <br />
+
+      <Transition appear show={projectDetails} as={Fragment}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-10 overflow-y-auto"
+          onClose={closeModal}
+        >
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0" />
+            </Transition.Child>
+
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span
+              className="inline-block h-screen align-middle"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <Dialog.Title
+                  as="h3"
+                  className="text-lg font-medium leading-6 text-gray-900"
+                >
+                  Project Details
+                </Dialog.Title>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">
+                    {errorMessage}
+                  </p>
+                </div>
+                <div className="mb-6 pt-3 rounded ">
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">    Project Leader: Hasan Al-Banna bin Mohamed</label>
+
+
+                  <label className="block text-sm mb-2 ml-3" htmlFor="email">       Name of co-researchers</label>
+
+                  <div className='px-4'>
+                    <li>Inderjit Singh a/l Tara Singh</li>
+                    <li>Safar Yaacob</li>
+                    <li>Ummul Fahri Abdul Rauf</li>
+                    <li>Jessica Ong Hai Liaw</li>
+                    <li>Inderjit Singh a/l Tara Singh</li>
+                    <li>Abdul Rahman Abdul Razak Shaik</li>
+                    <li>Siti Najwa Zainuddin</li>
+                    <li>Kwong Fook Wen</li>
+                    <li>Wong Wai Loong</li>
+                  </div>
+                  <br></br>
+
+                  <label className="block text-sm mb-2 ml-3" htmlFor="email">National Defence University of Malaysia, Sg Besi Camp
+                    hasanalbanna@upnm.edu.my</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">  Research Field : Social Science</label>
+
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">    Duration : 1 September 2019 – 31 May 2022</label>
+
+
+
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                      onClick={() => { showProjectDetails(false) }}
+                    >
+                      Okay
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog >
+      </Transition >
+
+      <h1>About Study</h1>
+
       <p>
         You are invited to participate in a web - app online survey on Measurement of Intangible Human Dimension of Soldiers Leading Towards Military Command Climate Readiness conducted by National Defence University of Malaysia(NDUM).This is a research project being conducted to examine the intangible human dimensions of soldiers.For this purpose, we would appreciate if you could respond to the following questionnaire relating to morale, quality of life and psychological factors.It should take approximately 20 - 30minutes to complete.The Ministry of Education(MOE) has funded this study under the Fundamental Research Grant Scheme(FRGS / 1 / 2019 / SS03 / UPNM / 02 / 2).
       </p>
@@ -68,7 +149,8 @@ export default function slug(props) {
         workload.
       </p>
       <br />
-
+      <YoutubeEmbed embedId="Ra5n4bjFO0g" />
+      <br />
       <p>
         ELECTRONIC CONSENT: Please select your choice below. Clicking on the “Agree” button indicates that
       </p>
@@ -84,11 +166,11 @@ export default function slug(props) {
         className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
         onClick={() => goToThanks()}
       >
-        Disagree
+        Project Details
       </button>
       <button
         type="button"
-        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        className="mt-3 w-100 bg-purple-500 text-white-100 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
         onClick={() => setConsent(true)}
       >
         Agree
@@ -201,6 +283,8 @@ export default function slug(props) {
 
     <div className='bg-white rounded-xl p-5 shadow-2xl max-w-4xl mx-auto'>
       <User ></User>
+
+
 
       <Transition appear show={errorMessage != ""} as={Fragment}>
         <Dialog

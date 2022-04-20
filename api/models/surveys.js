@@ -24,7 +24,11 @@ const Survey = db.define('surveys', {
   title_my: {
     type: Sequelize.STRING,
     allowNull: false
-  }
+  },
+  status: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
 });
 
 module.exports = Survey;
