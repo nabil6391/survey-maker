@@ -41,12 +41,12 @@ export function Demographic() {
                         <h4 className="text-sm text-gray-900 font-medium">{filterName(filter)}</h4>
                     </div>
 
-                    <RadioGroup value={userData[filter.id]} onChange={option => handleChange(option.value, filter.id)} className="mt-2 ">
+                    <RadioGroup value={userData[filter.id]} onChange={option => handleChange(option, filter.id)} className="mt-2 ">
                         <div className="grid grid-cols-4 gap-4">
                             {filter.options.map((option) => (
-                                <RadioGroup.Option
-                                    value={option}
-                                    name={optionName(option)}
+                                < RadioGroup.Option
+                                    value={option.value}
+                                    name={filter.id}
                                     className={({ active, checked }) =>
                                         classNames(
                                             'bg-white shadow-sm text-gray-900 cursor-pointer',
@@ -61,7 +61,7 @@ export function Demographic() {
                             ))}
                         </div>
                     </RadioGroup>
-                </div>
+                </div >
             })}
 
         </div >

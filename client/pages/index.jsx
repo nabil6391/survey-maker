@@ -4,11 +4,14 @@ import Layout from '../components/Layout';
 import Link from 'next/link';
 import { getAuthSession } from '../util/withAuth';
 import axios from 'axios';
-
 import { SERVER_URL } from "./_app";
+import { createContext, useContext, useState } from "react";
+import { content, useLanguageContext } from "../context/LanguageContext"
 
 export default function Home(props) {
   console.log(props.user)
+  const { language } = useLanguageContext();
+
   return (
     <Layout username={props.user.username}>
 
@@ -16,14 +19,14 @@ export default function Home(props) {
 
         <main className="bg-white max-w-lg mx-auto p-8 md:p-12 rounded-lg shadow-2xl">
           <section>
-            <h3 className="font-bold text-2xl">Welcome {props.user.username}</h3>
+            <h3 className="font-bold text-2xl">{content[language]['welcome']} {props.user.username}</h3>
           </section>
         </main>
 
         <main className="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
-          <h1>Current Surveys</h1>
+          <h1>{content[language]['current_surveys']}</h1>
           {
-            props.surveys.length == 0 ? <p>Nothing Available</p> : props.surveys.map((survey) => {
+            props.surveys.length == 0 ? <p>{content[language]['no_surveys']}</p> : props.surveys.map((survey) => {
               return (
                 <div>
                   <h1>{survey.title}</h1>
@@ -36,7 +39,7 @@ export default function Home(props) {
                           type="button"
                           className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                         >
-                          Edit
+                          {content[language]['edit']}
                         </button>
                       </a>
                     </Link>
@@ -46,7 +49,7 @@ export default function Home(props) {
                           type="button"
                           className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >
-                          View Stats
+                          {content[language]['view_stats']}
                         </button>
                       </a>
                     </Link>
@@ -56,7 +59,7 @@ export default function Home(props) {
                           type="button"
                           className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >
-                          View Responses
+                          {content[language]['view_responses']}
                         </button>
                       </a>
                     </Link>
@@ -66,7 +69,7 @@ export default function Home(props) {
                           type="button"
                           className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         >
-                          View Survey
+                          {content[language]['view_survey']}
                         </button>
                       </a>
                     </Link>
@@ -84,7 +87,7 @@ export default function Home(props) {
             <a>
               <button
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-              >+ New Survey</button>
+              >+ {content[language]['new_survey']}</button>
             </a>
           </Link>
         </div>

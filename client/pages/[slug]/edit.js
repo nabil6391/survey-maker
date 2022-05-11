@@ -9,35 +9,31 @@ import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
-import BarChartComponent from '../../components/BarChartComponent';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
-import { Demographic, DemographicInfos } from '../../components/Demographic'
-import CategorySubSection from '../../components/CategorySubSection'
-import User from '../../components/User';
-import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
-
+import { content, useLanguageContext } from "../../context/LanguageContext"
 
 export default function dashboard(props) {
   const user = props.user;
   // console.log('user', user);
   const access = props.access;
   const survey = props.survey;
+
+  const { language } = useLanguageContext();
+
   if (survey === undefined) {
     return (
       <Layout>
         <h3 style={{ color: '#f7fcfc' }}>
-          Sorry you have no access to this page.
+          {content[language]['no_access']}
         </h3>
       </Layout>
     );
   }
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   if (access === true) {
-    const username = user.username;
-    const surveyId = props.surveyId;
     const slug = props.slug;
     const questions = props.questions;
 
@@ -112,7 +108,7 @@ export default function dashboard(props) {
               <div className="relative z-10 flex items-baseline justify-between pt-6 pb-6 border-b border-gray-200">
                 <div>
                   <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
-                  <h4 className="text-xl" >www.survey.com/{survey.slug}</h4>
+                  <h4 className="text-xl" >www.ccres.com/{survey.slug}</h4>
                 </div>
 
                 <div className="flex items-center">
@@ -148,10 +144,6 @@ export default function dashboard(props) {
               </div>
 
               <section aria-labelledby="products-heading" className="pt-6 pb-24">
-                <h2 id="products-heading" className="sr-only">
-                  Products
-                </h2>
-
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
                   {/* Filters */}
                   <form className="hidden lg:block">
@@ -221,7 +213,7 @@ export default function dashboard(props) {
                               window.location.href = `/${slug}`;
                             }}
                           >
-                            VIEW SURVEY
+                            {content[language]['view_survey']}
                           </button>
                         </div>
                       )}
@@ -237,7 +229,7 @@ export default function dashboard(props) {
   }
   return (
     <Layout username={props.user.username}>
-      Sorry you have no access to this page.
+      {content[language]['no_access']}
     </Layout>
   );
 }

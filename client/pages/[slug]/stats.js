@@ -1,15 +1,11 @@
 import Layout from '../../components/Layout';
-import BarChartComponent from '../../components/BarChartComponent';
 import BarChartSubCategoryComponent from '../../components/BarChartSubCategoryComponent';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import { Fragment, useState } from 'react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
-import { Demographic, DemographicInfos } from '../../components/Demographic'
-import CategorySubSection from '../../components/CategorySubSection'
-import User from '../../components/User';
-import { useLanguageContext, filters, filterName, optionName, categoryTitle, subcategoryTitle } from "../../context/LanguageContext";
+import { useLanguageContext, filters, filterName, optionName, categoryTitle, subcategoryTitle, content } from "../../context/LanguageContext";
 import { Dialog, Disclosure, Menu, RadioGroup, Transition, Tab } from '@headlessui/react'
 import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart,
@@ -67,7 +63,6 @@ const barColors =
     "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
     "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"
   ]
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -380,10 +375,6 @@ export default function stats(props) {
               </div>
 
               <section aria-labelledby="products-heading" className="pt-6 pb-24">
-                <h2 id="products-heading" className="sr-only">
-                  Products
-                </h2>
-
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10 ">
                   {/* Filters */}
                   <form className="hidden lg:block bg-white">
@@ -449,8 +440,6 @@ export default function stats(props) {
                             )}
                           >
                             {idx == 0 && <>
-                              {JSON.stringify(language)}
-                              <br></br>
                               {/* {JSON.stringify(selectedFilters)} */}
                               <br></br>
                               {/* {JSON.stringify(selectedUserData)} */}
@@ -471,7 +460,7 @@ export default function stats(props) {
                                       <BarChart
                                         data={barChartData}
                                       >
-                                        <XAxis dataKey="value" width={10} height={12} interval={0} />
+                                        <XAxis dataKey="value" width={10} height={15} interval={0} />
 
                                         {/* <YAxis /> */}
                                         <Tooltip />
@@ -506,7 +495,7 @@ export default function stats(props) {
                               })}
 
                             </>}
-                            {idx == 1 && <div className="bg-white rounded-xl p-5">    SubCategory
+                            {idx == 1 && <div className="bg-white rounded-xl p-5">Sub Category
                               {categories.map((category) => {
                                 return (
                                   <div >

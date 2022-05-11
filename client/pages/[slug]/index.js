@@ -12,13 +12,23 @@ import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
 import { Dialog, Transition } from '@headlessui/react';
+import { content, useLanguageContext } from "../../context/LanguageContext"
 
 export default function slug(props) {
   console.log("slug started")
+  const router = useRouter();
+  const { language } = useLanguageContext();
+
+  if (typeof window !== 'undefined') {
+    if (!localStorage.getItem('language')) {
+      router.push(`/welcome?redirect=${props.slug}`);
+    }
+  }
+
   if (!props.questions || props.questions.length == 0) {
     return (
       <Layout><div className='bg-white rounded-xl p-5 shadow-2xl max-w-2xl mx-auto'>
-        <h3 >Oops..This page does not exist</h3>
+        <h3>{content[language]['page_not_exist']}</h3>
       </div>
       </Layout>
     );
@@ -83,7 +93,7 @@ export default function slug(props) {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Project Details
+                  {content[language]['project_details']}
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
@@ -91,10 +101,10 @@ export default function slug(props) {
                   </p>
                 </div>
                 <div className="mb-6 pt-3 rounded ">
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">    Project Leader: Hasan Al-Banna bin Mohamed</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Project Leader: Hasan Al-Banna bin Mohamed</label>
 
 
-                  <label className="block text-sm mb-2 ml-3" htmlFor="email">       Name of co-researchers</label>
+                  <label className="block text-sm mb-2 ml-3" htmlFor="email">Name of co-researchers</label>
 
                   <div className='px-4'>
                     <li>Inderjit Singh a/l Tara Singh</li>
@@ -111,9 +121,9 @@ export default function slug(props) {
 
                   <label className="block text-sm mb-2 ml-3" htmlFor="email">National Defence University of Malaysia, Sg Besi Camp
                     hasanalbanna@upnm.edu.my</label>
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">  Research Field : Social Science</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Research Field: Social Science</label>
 
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">    Duration : 1 September 2019 – 31 May 2022</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Duration : 1 September 2019 – 31 May 2022</label>
 
 
 
@@ -123,7 +133,7 @@ export default function slug(props) {
                       className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                       onClick={() => { showProjectDetails(false) }}
                     >
-                      Okay
+                      {content[language]['okay']}
                     </button>
                   </div>
                 </div>
@@ -166,28 +176,27 @@ export default function slug(props) {
         className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
         onClick={() => goToThanks()}
       >
-        Project Details
+        {content[language]['project_details']}
       </button>
       <button
         type="button"
         className="mt-3 w-100 bg-purple-500 text-white-100 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
         onClick={() => setConsent(true)}
       >
-        Agree
+        {content[language]['agree']}
       </button>
     </div >
   }
 
   const steps = [
-    "Profile Information",
+    content[language]['profile_information'],
   ];
   props.categories.forEach(element => {
     steps.push(element.title)
   });
-  steps.push("Complete")
+  steps.push(content[language]['complete'])
 
   const { userData, setUserData } = useStepperContext()
-  const router = useRouter();
   const displayStep = (step) => {
     console.log(step)
     switch (step) {
@@ -262,7 +271,7 @@ export default function slug(props) {
             }
           } else {
             // setCurrentStep(newStep);
-            setErrorMessage("Please input all information")
+            setErrorMessage(content[language]['input_information'])
           }
       }
     }
@@ -282,10 +291,7 @@ export default function slug(props) {
   return <Layout>
 
     <div className='bg-white rounded-xl p-5 shadow-2xl max-w-4xl mx-auto'>
-      <User ></User>
-
-
-
+      {/* <User ></User> */}
       <Transition appear show={errorMessage != ""} as={Fragment}>
         <Dialog
           as="div"
@@ -326,7 +332,7 @@ export default function slug(props) {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Error
+                  {content[language]['error']}
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
@@ -340,7 +346,7 @@ export default function slug(props) {
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                     onClick={closeModal}
                   >
-                    Okay
+                    {content[language]['okay']}
                   </button>
                 </div>
               </div>
@@ -386,7 +392,7 @@ export async function getServerSideProps(context) {
       params: { slug: slug }
     }
     )
-    console.log("response")
+    console.log("responses")
     console.log(data)
     var survey = data[0]
     if (survey === undefined) {

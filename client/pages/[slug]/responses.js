@@ -8,12 +8,14 @@ import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
+import { content, useLanguageContext } from "../../context/LanguageContext"
 
 export default function responses(props) {
   const survey = props.survey;
   const questions = props.questions;
-
   const responses = props.responses;
+
+  const { language } = useLanguageContext();
 
   console.log("responses")
   console.log(responses)
