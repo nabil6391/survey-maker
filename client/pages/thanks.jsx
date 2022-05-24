@@ -1,6 +1,6 @@
 
 import Layout from '../components/Layout';
-import { content, useLanguageContext } from "../../context/LanguageContext"
+import { content, useLanguageContext } from "../context/LanguageContext"
 
 export default function thanks(props) {
   const { language, setLanguage } = useLanguageContext()
