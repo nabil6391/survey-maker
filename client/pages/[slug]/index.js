@@ -13,17 +13,17 @@ import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
 import { Dialog, Transition } from '@headlessui/react';
 import { content, useLanguageContext } from "../../context/LanguageContext"
+import Image from 'next/image';
+import { checkLanguage } from '../../util/withAuth';
 
 export default function slug(props) {
   console.log("slug started")
   const router = useRouter();
   const { language } = useLanguageContext();
 
-  if (typeof window !== 'undefined') {
-    if (!localStorage.getItem('language')) {
-      router.push(`/welcome?redirect=${props.slug}`);
-    }
-  }
+
+
+  checkLanguage()
 
   if (!props.questions || props.questions.length == 0) {
     return (
@@ -111,7 +111,6 @@ export default function slug(props) {
                     <li>Safar Yaacob</li>
                     <li>Ummul Fahri Abdul Rauf</li>
                     <li>Jessica Ong Hai Liaw</li>
-                    <li>Inderjit Singh a/l Tara Singh</li>
                     <li>Abdul Rahman Abdul Razak Shaik</li>
                     <li>Siti Najwa Zainuddin</li>
                     <li>Kwong Fook Wen</li>
@@ -124,8 +123,6 @@ export default function slug(props) {
                   <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Research Field: Social Science</label>
 
                   <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Duration : 1 September 2019 – 31 May 2022</label>
-
-
 
                   <div className="mt-4">
                     <button
@@ -143,14 +140,14 @@ export default function slug(props) {
         </Dialog >
       </Transition >
 
-      <h1>About Study</h1>
+      <h1 className='font-bold'>About Study</h1>
 
       <p>
-        You are invited to participate in a web - app online survey on Measurement of Intangible Human Dimension of Soldiers Leading Towards Military Command Climate Readiness conducted by National Defence University of Malaysia(NDUM).This is a research project being conducted to examine the intangible human dimensions of soldiers.For this purpose, we would appreciate if you could respond to the following questionnaire relating to morale, quality of life and psychological factors.It should take approximately 20 - 30minutes to complete.The Ministry of Education(MOE) has funded this study under the Fundamental Research Grant Scheme(FRGS / 1 / 2019 / SS03 / UPNM / 02 / 2).
+        You are invited to participate in a web-app online survey on Measurement of Intangible Human Dimension of Soldiers Leading Towards Military Command Climate Readiness conducted by the National Defence University of Malaysia (NDUM). This is a research project being conducted to examine the intangible human dimensions of soldiers. For this purpose, we would appreciate it if you could respond to the following questionnaire relating to morale, quality of life, and psychological factors. It should take approximately 20-30 minutes to complete. The Ministry of Education (MOE) has funded this study under the Fundamental Research Grant Scheme(FRGS/1/ 2019/SS03/UPNM/02/2).
       </p>
       <br />
 
-      <h1>CONFIDENTIALITY</h1>
+      <h1 className='font-bold'>CONFIDENTIALITY</h1>
       <p>
         We would like to assure you that your response would be treated as private and
         CONFIDENTIAL and would only be used for this academic study.
@@ -162,12 +159,12 @@ export default function slug(props) {
       <YoutubeEmbed embedId="Ra5n4bjFO0g" />
       <br />
       <p>
-        ELECTRONIC CONSENT: Please select your choice below. Clicking on the “Agree” button indicates that
+        ELECTRONIC CONSENT: Please select your choice below. Clicking on the “Agree” button indicates that :
       </p>
       <br />
       <ul>
-        <li>•	You have read the above information</li>
-        <li>•	You voluntarily agree to participate</li>
+        <li>•	You have read the above information.</li>
+        <li>•	You voluntarily agree to participate. </li>
       </ul>
 
       <br />

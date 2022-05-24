@@ -26,23 +26,21 @@ export default function welcome(props) {
       } else {
         router.push(`/`);
       }
-
     }
-
-
   };
 
   return (
     <React.Fragment>
       <div className="font-AngkatanBersenjata body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')]  bg-cover" >
 
-        <main className="bg-white/60 max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
+        <main className="bg-white/60 max-w-lg mx-auto p-1 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
 
-          <section className="mt-10">
+          <section className="flex flex-col justify-center justify-items-center">
             <form onSubmit={handleSubmit}>
 
-              <div className="mb-6 pt-3 rounded ">
-                {/* <Image className="bg-gradient-to-r absolute" src="/image0.jpeg" alt="me" width="640" height="640" /> */}
+              <div className="mb-6 pt-3 rounded">
+                <Image className="" src="/logo.png" alt="me" width={200} height={250} />
+
                 <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">{content[language]['welcome']}</label>
                 <label className="block text-sm mb-2 ml-3" htmlFor="email">{content[language]['userrole']}</label>
 

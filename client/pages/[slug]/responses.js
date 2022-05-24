@@ -1,7 +1,7 @@
 
 import Layout from '../../components/Layout';
 import BarChartComponent from '../../components/BarChartComponent';
-import { getAuthSession } from '../../util/withAuth';
+import { checkLanguage, getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import { Demographic, DemographicInfos } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
@@ -14,6 +14,8 @@ export default function responses(props) {
   const survey = props.survey;
   const questions = props.questions;
   const responses = props.responses;
+
+  checkLanguage()
 
   const { language } = useLanguageContext();
 

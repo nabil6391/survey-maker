@@ -3,11 +3,14 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { getAuthSession } from '../util/withAuth';
+import { checkLanguage, getAuthSession } from '../util/withAuth';
 import axios from 'axios';
 import { SERVER_URL } from './_app';
 
 export default function New(props) {
+
+  checkLanguage()
+
   const user = props.user;
   const [errorMessage, setErrorMessage] = useState('');
   const [title, setTitle] = useState('');

@@ -4,12 +4,14 @@ import Cookies from "js-cookie";
 import { useAuth } from "../util/authProvider";
 import axios from 'axios';
 import { SERVER_URL } from "./_app";
-import { getAuthSession } from "../util/withAuth";
+import { checkLanguage, getAuthSession } from "../util/withAuth";
 
 const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setError] = useState("");
+
+  checkLanguage()
   const { auth } = useAuth()
   const router = useRouter();
 

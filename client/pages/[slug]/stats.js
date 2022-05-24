@@ -78,8 +78,6 @@ export default function stats(props) {
 
   const tabs = ["Demographic", "BarChart", "RadarChart", "Color"]
 
-  console.log("responses")
-  console.log(responses)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters)
   const { language } = useLanguageContext()
@@ -111,9 +109,13 @@ export default function stats(props) {
 
     // Performing a download with click
     a.click()
+    console.log('download')
   }
 
-  const csvmaker = function (data) {
+  const exportCsv = function (data) {
+
+    // Empty array for storing the values
+    // headers = ['Respondent', filers, questions arranged by category and subcategory];
 
     // Empty array for storing the values
     csvRows = [];
@@ -134,7 +136,10 @@ export default function stats(props) {
     csvRows.push(values)
 
     // Returning the array joining with new line
-    return csvRows.join('\n')
+    csvRows.join('\n')
+    console.log(csvRows)
+
+    download(csvRows)
   }
 
   function updateFilter(id, e) {
@@ -273,8 +278,8 @@ export default function stats(props) {
                           {({ open }) => (
                             <>
                               <h3 className="-mx-2 -my-3 flow-root">
-                                <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
-                                  <span className="font-medium text-gray-900">{filterName(section)}</span>
+                                <Disclosure.Button className="px-5 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
+                                  <span className="font-medium text-gray-900 px-8">{filterName(section)}</span>
                                   <span className="ml-6 flex items-center">
                                     {open ? (
                                       <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
@@ -284,7 +289,7 @@ export default function stats(props) {
                                   </span>
                                 </Disclosure.Button>
                               </h3>
-                              <Disclosure.Panel className="pt-6">
+                              <Disclosure.Panel className="pt-6 px-6">
                                 <div className="space-y-6">
                                   {section.options.map((option, optionIdx) => (
                                     <div key={option.value} className="flex items-center">
@@ -352,12 +357,17 @@ export default function stats(props) {
                 </Menu> */}
                   <Menu as="div" className="relative inline-block text-left">
                     <div>
-                      <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900" >
-                        Export
-                        <ChevronDownIcon
-                          className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
+                      <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+
+                      >
+
+                        <button
+                          type="button"
+                          className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 "
+                          onClick={() => exportCsv()}
+                        >
+                          <span>    Export</span>
+                        </button>
                       </Menu.Button>
                     </div>
                   </Menu>
@@ -387,7 +397,7 @@ export default function stats(props) {
                           <>
                             <h3 className="-my-3 flow-root">
                               <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">{filterName(filter)}</span>
+                                <span className="font-medium text-gray-900 px-2">{filterName(filter)}</span>
                                 <span className="ml-6 flex items-center">
                                   {open ? (
                                     <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
@@ -397,10 +407,9 @@ export default function stats(props) {
                                 </span>
                               </Disclosure.Button>
                             </h3>
-                            <Disclosure.Panel className="pt-6">
+                            <Disclosure.Panel className="pt-6 p-2">
                               <div className="space-y-4">
-                                {JSON.stringify(selectedUserData[filter.id])}
-                                {JSON.stringify(selectedFilters[filter.id])}
+
                                 <RadioGroup onChange={(value) => updateFilter(filter.id, value)} className="mt-4 flex mx-auto w-full">
 
                                   {filter.options.map((option, index) => (
@@ -411,7 +420,7 @@ export default function stats(props) {
                                         className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                       />
                                       <label
-                                        className="ml-3 text-sm text-gray-600"
+                                        className="ml-3 text-sm text-gray-600 pr-1"
                                       >
                                         {optionName(option)}
                                       </label>
@@ -429,8 +438,8 @@ export default function stats(props) {
 
                   {/* Product grid */}
                   <div className="lg:col-span-3">
-                    <div className="w-full  px-2 sm:px-0">
-                      <Tab.Panels className="mt-2">
+                    <div className="w-full px-2 sm:px-0">
+                      <Tab.Panels>
                         {Object.values(tabs).map((posts, idx) => (
                           <Tab.Panel
                             key={idx}
@@ -441,9 +450,12 @@ export default function stats(props) {
                           >
                             {idx == 0 && <>
                               {/* {JSON.stringify(selectedFilters)} */}
-                              <br></br>
                               {/* {JSON.stringify(selectedUserData)} */}
-                              <br></br>
+
+                              <div className='bg-white rounded-xl p-10 shadow-xl max-w-2xl m-2'>
+                                <h2 className='mx-auto text-xl font-bold'>Total Responses: {users.length}</h2>
+                              </div>
+
                               {filters.map((filter) => {
                                 var barChartData = Object.entries(selectedUserData[filter.id]).map((e) => {
                                   return {
@@ -455,41 +467,45 @@ export default function stats(props) {
 
                                 return (
                                   <div className='bg-white rounded-xl p-10 shadow-xl max-w-2xl m-2'>
-                                    <h2 className='mx-auto'>{filterName(filter)}</h2>
-                                    <ResponsiveContainer width="50%" height={300}>
-                                      <BarChart
-                                        data={barChartData}
-                                      >
-                                        <XAxis dataKey="value" width={10} height={15} interval={0} />
+                                    <h2 className='mx-auto text-xl font-bold'>{filterName(filter)}</h2>
+                                    <div className='grid grid-flow-row'>
+                                      <ResponsiveContainer width="50%" height={300}>
+                                        <BarChart
+                                          data={barChartData}
+                                        >
+                                          <XAxis dataKey="value" width={10} height={15} interval={0} />
 
-                                        {/* <YAxis /> */}
+                                          {/* <YAxis /> */}
+                                          <Tooltip />
+
+                                          <Bar dataKey="count" fill="#30CDCD" barSize={50} label>
+                                            {
+                                              barChartData.map((entry, index) => {
+                                                return <Cell fill={barColors[index]} />;
+                                              })
+                                            }
+                                          </Bar>
+                                        </BarChart>
+
+                                      </ResponsiveContainer>
+
+                                      <br></br>
+
+
+
+                                      <PieChart width={730} height={250}>
+                                        <Legend verticalAlign="top" height={36} />
                                         <Tooltip />
-
-                                        <Bar dataKey="count" fill="#30CDCD" barSize={50}>
+                                        <Pie data={barChartData} dataKey="count" nameKey="value" fill="#8884d8" label >
                                           {
                                             barChartData.map((entry, index) => {
                                               return <Cell fill={barColors[index]} />;
                                             })
                                           }
-                                        </Bar>
-                                      </BarChart>
+                                        </Pie>
 
-                                    </ResponsiveContainer>
-
-                                    <br></br>
-
-                                    <PieChart width={730} height={250}>
-                                      <Legend verticalAlign="top" height={36} />
-                                      <Tooltip />
-                                      <Pie data={barChartData} dataKey="count" nameKey="value" fill="#8884d8" >
-                                        {
-                                          barChartData.map((entry, index) => {
-                                            return <Cell fill={barColors[index]} />;
-                                          })
-                                        }
-                                      </Pie>
-
-                                    </PieChart>
+                                      </PieChart>
+                                    </div>
                                   </div>
                                 );
                               })}
@@ -596,8 +612,8 @@ export default function stats(props) {
                 </div>
               </section>
             </main>
-          </div>
-        </Tab.Group>
+          </div >
+        </Tab.Group >
       </div >
     </Layout >
   )

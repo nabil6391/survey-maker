@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 import AddQuestionComponent from '../../components/AddQuestionComponent';
 import AddCategoryComponent from '../../components/AddCategoryComponent';
 import AddSubCategoryComponent from '../../components/AddSubCategoryComponent';
-import { getAuthSession } from '../../util/withAuth';
+import { checkLanguage, getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
@@ -20,6 +20,8 @@ export default function dashboard(props) {
   // console.log('user', user);
   const access = props.access;
   const survey = props.survey;
+
+  checkLanguage()
 
   const { language } = useLanguageContext();
 
@@ -108,7 +110,7 @@ export default function dashboard(props) {
               <div className="relative z-10 flex items-baseline justify-between pt-6 pb-6 border-b border-gray-200">
                 <div>
                   <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
-                  <h4 className="text-xl" >www.ccres.com/{survey.slug}</h4>
+                  <h4 className="text-xl" >www.ccres.co/{survey.slug}</h4>
                 </div>
 
                 <div className="flex items-center">

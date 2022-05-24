@@ -1,6 +1,7 @@
 
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 
 export default function Header(props) {
   const username = props.username;
@@ -8,10 +9,11 @@ export default function Header(props) {
     <header >
       <nav className="p-3 ">
         <Link href="/">
-          <img
+          <Image
             alt=""
-            src="../logo-white.svg"
-            height="40"
+            src="/logo.png"
+            height={40}
+            width={40}
           />
         </Link>
 
