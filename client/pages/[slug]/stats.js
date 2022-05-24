@@ -626,8 +626,6 @@ export async function getServerSideProps(context) {
       params: { slug: slug }
     }
     )
-    console.log("response")
-    console.log(data)
     var survey = data[0]
     if (survey === undefined) {
       return { props: {} };
@@ -637,36 +635,28 @@ export async function getServerSideProps(context) {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
-    console.log("questions2")
 
     const categoriesres = await axios.get(SERVER_URL + `/api/v1/categories`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
-    console.log("questions1")
 
     const subcategoriesres = await axios.get(SERVER_URL + `/api/v1/subcategories`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
 
-    console.log("questions")
 
     const responsesres = await axios.get(SERVER_URL + `/api/v1/responses/`, {
       headers: { Authorization: `Bearer ${token}` },
       params: { surveyId: survey.id }
     })
 
-    console.log("questions")
 
     var questions = questionsres.data
     var categories = categoriesres.data
     var subcategories = subcategoriesres.data
     var responses = responsesres.data
-    console.log(questions)
-    console.log(categories)
-    console.log(subcategories)
-    console.log(responses)
 
     var res = await axios.get(SERVER_URL + `/api/v1/demographics`, {
       headers: { Authorization: `Bearer ${token}` },

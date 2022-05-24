@@ -42,8 +42,6 @@ const login = () => {
         if (response.status = 200) {
           // setUser(data.user)
 
-          // console.log(response.data)
-
           Cookies.set('jwt', response.data, {
             expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000),
           });
@@ -54,7 +52,6 @@ const login = () => {
             headers: { Authorization: `Bearer ${response.data}` }
           };
 
-          console.log("calling user1")
           try {
             var res = await axios.get(`/user`, config)
             console.log(res)

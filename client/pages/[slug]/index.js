@@ -198,7 +198,6 @@ export default function slug(props) {
 
   const { userData, setUserData } = useStepperContext()
   const displayStep = (step) => {
-    console.log(step)
     switch (step) {
       case 1:
         return <Demographic />;
@@ -209,10 +208,8 @@ export default function slug(props) {
 
   const handleClick = async (direction) => {
     let newStep = currentStep;
-    console.log(newStep)
     direction === "next" ? newStep++ : newStep--;
     // check if steps are within bounds
-    console.log(currentStep)
     if (newStep > 0 && newStep <= steps.length) {
 
       switch (currentStep) {
@@ -231,16 +228,11 @@ export default function slug(props) {
           var responses = Object.entries(userData["responses"] ?? [])
           var questionsAnswered = responses.filter(response => categoryQuestions.includes(parseInt(response[0]))).length
 
-          console.log("checking3")
           console.log(questionsAnswered, categoryQuestions.length)
           if (direction != "next") {
             setCurrentStep(newStep);
           } else if (questionsAnswered == categoryQuestions.length) {
-            console.log("checking1")
-            console.log(currentStep)
-            console.log(steps.length - 1)
             if (currentStep === steps.length - 1) {
-              console.log("checking")
               try {
 
                 userData["surveyId"] = survey.id
@@ -254,7 +246,6 @@ export default function slug(props) {
                   }),
                 });
 
-                console.log(response)
                 if (response.status == 201) {
                   router.push(`/thanks`);
                 } else {
@@ -281,7 +272,6 @@ export default function slug(props) {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    console.log("submits")
   };
 
   const questions = props.questions;
@@ -384,7 +374,6 @@ export default function slug(props) {
 }
 
 export async function getServerSideProps(context) {
-  console.log("index")
 
   try {
     const slug = context.query.slug;
@@ -392,8 +381,6 @@ export async function getServerSideProps(context) {
       params: { slug: slug }
     }
     )
-    console.log("responses")
-    console.log(data)
     var survey = data[0]
     if (survey === undefined) {
       return { props: {} };
@@ -402,25 +389,18 @@ export async function getServerSideProps(context) {
     const questionsres = await axios.get(SERVER_URL + `/api/v1/questions`, {
       params: { surveyId: survey.id }
     })
-    console.log("questions2")
 
     const categoriesres = await axios.get(SERVER_URL + `/api/v1/categories`, {
       params: { surveyId: survey.id }
     })
-    console.log("questions1")
 
     const subcategoriesres = await axios.get(SERVER_URL + `/api/v1/subcategories`, {
       params: { surveyId: survey.id }
     })
 
-    console.log("questions")
-
     var questions = questionsres.data
     var categories = categoriesres.data
     var subcategories = subcategoriesres.data
-    console.log(questions)
-    console.log(categories)
-    console.log(subcategories)
 
     var userId = uuidv4()
     return {

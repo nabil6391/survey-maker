@@ -28,7 +28,6 @@ exports.createOne = async (req, res, next) => {
 
     try {
       const user = await User.create(USER_MODEL);
-      console.log('User crerated');
       return res.status(201).json(user);
     } catch (error) {
       return res.status(500).json(error);
@@ -49,7 +48,7 @@ exports.updateOne = async (req, res, next) => {
     try {
       const user = await User.update(USER_MODEL, { where: { id: req.params.id } });
       return res.status(200).json(user);
-    } catch (error) {}
+    } catch (error) { }
   } catch (error) {
     return res.status(500).json(error);
   }

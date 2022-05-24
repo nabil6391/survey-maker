@@ -8,7 +8,6 @@ import Image from 'next/image'
 import searchIcon from '../public/image0.jpeg';
 
 export default function New(props) {
-  console.log('welcome')
   const [errorMessage, setErrorMessage] = useState('');
   const [role, setRole] = useState('admin');
   const { language, setLanguage } = useLanguageContext()
@@ -16,10 +15,8 @@ export default function New(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('route')
     localStorage.setItem("language", language)
     const slug = router.query.redirect
-    console.log(slug)
 
     if (role == 'admin') {
       router.push(`/`);

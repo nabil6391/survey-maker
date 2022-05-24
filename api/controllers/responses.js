@@ -42,7 +42,6 @@ exports.createOne = async (req, res, next) => {
 
     try {
       const user = await Response.create(USER_MODEL);
-      console.log('Response crerated');
       return res.status(201).json(user);
     } catch (error) {
       return res.status(500).json(error);
@@ -59,10 +58,6 @@ exports.createAll = async (req, res, next) => {
       const USER_MODEL = req.body.userData
 
       const userDemo = await Demographic.create(USER_MODEL);
-      console.log(USER_MODEL);
-
-      console.log('Response crerated');
-      console.log(userDemo);
 
       const responses = Object.entries(req.body.userData.responses).map(([e, v]) => {
         var USER_MODEL = {
@@ -73,10 +68,7 @@ exports.createAll = async (req, res, next) => {
         return USER_MODEL
       });
 
-      console.log(responses)
       const user = await Response.bulkCreate(responses);
-      console.log('Response crerated');
-      console.log(user);
       return res.status(201).json(user);
     } catch (error) {
       console.log(error);

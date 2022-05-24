@@ -68,12 +68,9 @@ app.get("/api/v1/stats/:id", async (req, res, next) => {
 
     const user = await Response.findAll(options);
 
-    console.log(user)
-
     const ALL = await Demographic.findAll({
       where: req.query.surveyId
     });
-    console.log(ALL)
 
     return res.status(201).json(user);
     return res.status(200).json(ALL);
@@ -91,15 +88,9 @@ app.post("/api/v1/stats/:id", async (req, res, next) => {
     try {
       const USER_MODEL = req.body.userData
 
-      console.log(USER_MODEL);
-
       const userDemo = await Demographic.create(USER_MODEL);
 
-      console.log('Demographic created');
-      console.log(userDemo);
-
       var userId = USER_MODEL["userId"]
-      console.log(userId)
       const responses = Object.entries(req.body.userData.responses).map(([e, v]) => {
         var USER_MODEL = {
           surveyId: surveyId,
@@ -110,10 +101,7 @@ app.post("/api/v1/stats/:id", async (req, res, next) => {
         return USER_MODEL
       });
 
-      console.log(responses)
       const user = await Response.bulkCreate(responses);
-      console.log('Response crerated');
-      console.log(user);
       return res.status(201).json(user);
     } catch (error) {
       console.log(error);
@@ -140,7 +128,6 @@ function withAuth(req, res, next) {
   }
 
   if (!token) {
-    console.log("returning")
     return res
       .status(401)
       .json({ error: true, code: 'token.invalid', message: 'Token not present.' })

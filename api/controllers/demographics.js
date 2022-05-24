@@ -45,7 +45,6 @@ exports.createOne = async (req, res, next) => {
     };
 
     const user = await Demographic.create(USER_MODEL);
-    console.log('Demographic crerated');
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);

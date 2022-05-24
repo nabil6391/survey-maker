@@ -16,7 +16,7 @@ export default function Header(props) {
         </Link>
 
         {username ? (
-          <Link href={`/user/${username}`} >
+          <Link href={`/`} >
             <a className="text-white">Dashboard</a>
           </Link>
         ) : (
@@ -28,10 +28,6 @@ export default function Header(props) {
             <a>Login</a>
           </Link>
         ) : (
-          // <div>
-          //   <Link href={`/user/${username}`}>
-          //     <a>Dasboard</a>
-          //   </Link>
 
           <Link href="/logout">
             <a>logout</a>

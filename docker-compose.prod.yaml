@@ -1,0 +1,13 @@
+# docker-compose  -f docker-compose.yml -f docker-compose.dev.yml up    
+version: '3.8'
+services:
+  proxy:
+    image: nginx:1.15.5
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+  nextjs-ui:
+    command: prod
+  node_backend:
+    command: prod

@@ -43,7 +43,6 @@ exports.createOne = async (req, res, next) => {
 
     try {
       const user = await Subcategory.create(USER_MODEL);
-      console.log('Subcategory crerated');
       return res.status(201).json(user);
     } catch (error) {
       return res.status(500).json(error);

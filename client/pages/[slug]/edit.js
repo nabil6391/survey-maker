@@ -279,17 +279,10 @@ export async function getServerSideProps(context) {
       params: { surveyId: survey.id }
     })
 
-    console.log("questions")
 
     var questions = questionsres.data
     var categories = categoriesres.data
     var subcategories = subcategoriesres.data
-    console.log(questions)
-    console.log("cats")
-
-    console.log(categories)
-    console.log("subcats")
-    console.log(subcategories)
 
     var res = await axios.get(SERVER_URL + `/user`, {
       headers: { Authorization: `Bearer ${token}` },

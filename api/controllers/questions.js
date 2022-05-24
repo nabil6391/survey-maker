@@ -48,7 +48,6 @@ exports.createOne = async (req, res, next) => {
     };
 
     const user = await Question.create(USER_MODEL);
-    console.log('Question crerated');
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);

@@ -9,8 +9,6 @@ import { SERVER_URL } from './_app';
 
 export default function New(props) {
   const user = props.user;
-  console.log('user data ')
-  console.log(user)
   const [errorMessage, setErrorMessage] = useState('');
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState(title);
@@ -18,6 +16,11 @@ export default function New(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    if (title == undefined || title == '') {
+      setErrorMessage("Title cannot be empty")
+      return
+    }
+
     const response = await fetch(SERVER_URL + '/api/v1/surveys', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -63,16 +66,14 @@ export default function New(props) {
                   ></input>
                   <br />
 
-                  <p>www.survey.com/{slug}</p>
+                  <p>www.ccres.co/{slug}</p>
 
                 </div>
-
+                <p style={{ color: 'red' }}>{errorMessage}</p>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">  CREATE SURVEY</button>
               </form>
             </section>
           </main>
-
-          <p style={{ color: 'red' }}>{errorMessage}</p>
 
         </div>
 
@@ -109,7 +110,6 @@ export async function getServerSideProps(ctx) {
 
   if (res.status = 200) {
     var user = res.data
-    console.log(user)
     return {
       props: { user },
     }

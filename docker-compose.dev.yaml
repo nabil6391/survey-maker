@@ -1,0 +1,12 @@
+# docker-compose  -f docker-compose.yaml -f docker-compose.dev.yaml up    
+version: '3.8'
+services:
+  nextjs-ui:
+    command: dev
+    volumes:
+      - ./client:/usr/src/app/client
+      - /usr/src/app/client/node_modules
+    ports:
+      - "3001:3001"
+  node_backend:
+    command: dev
