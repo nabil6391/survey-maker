@@ -3,11 +3,11 @@ import React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, RadioGroup, Transition } from '@headlessui/react'
-import { useLanguageContext } from "../context/LanguageContext";
+import { content, useLanguageContext } from "../context/LanguageContext";
 import Image from 'next/image'
 import searchIcon from '../public/image0.jpeg';
 
-export default function New(props) {
+export default function welcome(props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [role, setRole] = useState('admin');
   const { language, setLanguage } = useLanguageContext()
@@ -34,7 +34,7 @@ export default function New(props) {
 
   return (
     <React.Fragment>
-      <div className="body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')]  bg-cover" >
+      <div className="font-AngkatanBersenjata body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')]  bg-cover" >
 
         <main className="bg-white/60 max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
 
@@ -43,10 +43,8 @@ export default function New(props) {
 
               <div className="mb-6 pt-3 rounded ">
                 {/* <Image className="bg-gradient-to-r absolute" src="/image0.jpeg" alt="me" width="640" height="640" /> */}
-                <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Welcome to CCRES</label>
-
-
-                <label className="block text-sm mb-2 ml-3" htmlFor="email">You are here as</label>
+                <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">{content[language]['welcome']}</label>
+                <label className="block text-sm mb-2 ml-3" htmlFor="email">{content[language]['userrole']}</label>
 
                 < div className=" w-full justify-center">
                   <RadioGroup className="p-4 flex " value={role} onChange={(e) => setRole(e)}>
@@ -75,8 +73,7 @@ export default function New(props) {
 
 
                 <br />
-                <label className="block text-sm font-bold mb-2 ml-3">Choose your prefferred Lnagugae</label>
-                {language}
+                <label className="block text-sm font-bold mb-2 ml-3">{content[language]['choose_language']}</label>
 
                 <div className="flex mx-auto w-full justify-center">
                   <RadioGroup className="p-4 flex " value={language} onChange={(e) => setLanguage(e)}>
@@ -87,7 +84,7 @@ export default function New(props) {
                           name="language"
                           value="bm"
                         />
-                        <div className="">Bahassa</div>
+                        <div className="">Bahasa</div>
                       </label>
                     </RadioGroup.Option>
                     <RadioGroup.Option className="p-4 " value="en" >

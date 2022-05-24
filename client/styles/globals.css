@@ -3,23 +3,35 @@
 @tailwind utilities;
 
 
-  nav {
-       display: flex;
-       position: static;
-       width: 100%;
-       height: 50px;
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       margin: 0px 0px 0px 0px;
-       background-color: #363232;
-     }
-     a {
-       font-size: 20px;
-       font-weight: normal;
-       margin: 12px;
-       color: #fff;
-     }
+@font-face {
+  font-family: "AngkatanBersenjata";
+  src: url("../public/fonts/AngkatanBersenjata.otf");
+}
+
+/* @layer base {
+  html {
+    font-family: AngkatanBersenjata, system-ui, sans-serif;
+  }
+} */
+
+nav {
+  display: flex;
+  position: static;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0px 0px 0px 0px;
+  background-color: #363232;
+}
+
+a {
+  font-size: 20px;
+  font-weight: normal;
+  margin: 12px;
+  color: #fff;
+}
 
 button {
   background-color: #30aaaa;
