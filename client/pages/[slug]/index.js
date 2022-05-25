@@ -6,13 +6,13 @@ import Stepper from '../../components/Stepper';
 import StepperControl from '../../components/StepperControl';
 import YoutubeEmbed from '../../components/YoutubeEmbed';
 import { useRouter } from 'next/router';
-import { Demographic, DemographicInfos } from '../../components/Demographic'
+import { Demographic } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
 import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
 import { Dialog, Transition } from '@headlessui/react';
-import { content, useLanguageContext } from "../../context/LanguageContext"
+import { content, useLanguageContext, filters } from "../../context/LanguageContext"
 import Image from 'next/image';
 import { checkLanguage } from '../../util/withAuth';
 
@@ -210,10 +210,12 @@ export default function slug(props) {
       switch (currentStep) {
         case 1:
           //Check if all data is present
-
           var asd = Object.entries(userData)
-          if (asd.length == 0 || Object.entries(DemographicInfos).length != asd.length) {
-            setErrorMessage("Please select all information")
+          console.log(asd)
+          if (asd.length == 0 || filters.length != asd.length) {
+            var remaining = filters.filter(e => !asd.some(a => a[0] == e.id)).map(m => m.name)
+            console.log(remaining)
+            setErrorMessage("Please select all information \n" + JSON.stringify(remaining))
           } else {
             setCurrentStep(newStep);
           }
@@ -277,7 +279,7 @@ export default function slug(props) {
 
     <Layout>
 
-      <div className="bg-white/70 rounded-xl p-5 shadow-2xl max-w-4xl mx-auto backdrop-blur-lg">
+      <div className="bg-white/50 rounded-xl p-5 shadow-2xl max-w-4xl mx-auto backdrop-blur-lg">
         {/* <User ></User> */}
         <Transition appear show={errorMessage != ""} as={Fragment}>
           <Dialog
