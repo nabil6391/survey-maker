@@ -57,7 +57,7 @@ export default function New(props) {
             <section className="mt-10">
               <form className="flex flex-col" onSubmit={handleSubmit}>
                 <div className="mb-6 pt-3 rounded bg-gray-200">
-                  <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">Survey Title</label>
+                  <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">Survey</label>
 
                   <input
                     onChange={(e) => {
