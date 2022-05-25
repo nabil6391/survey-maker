@@ -29,11 +29,11 @@ export default function CategorySubSection(props) {
     return (
         <div className={`w-full flex-1 rounded-2xl`} >
             <div className="max-w-4xl mx-auto  p-20">
-                <h1 >Category: {category.title}</h1>
+                <h1 className="font-bold">Category: {category.title}</h1>
                 {subcategories.filter(sc => sc.categoryId == category.id).map((subcategory) => {
                     return (
                         <div className='p-5 rounded-xl my-5 '>
-                            <h1>SubCategory: {subcategory.title}</h1>
+                            <h1 className="font-bold">SubCategory: {subcategory.title}</h1>
                             {questions.filter(question => question.subcategoryId == subcategory.id).map((question) => {
                                 return (
                                     <div className=' p-5 rounded-xl my-5' key={question.id}>

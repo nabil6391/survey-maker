@@ -35,20 +35,22 @@ export default function welcome(props) {
 
         <main className="bg-white/60 max-w-lg mx-auto p-2 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
 
-          <section className="flex flex-row justify-center justify-items-center">
+          <section className="">
             <form onSubmit={handleSubmit}>
 
-              <div className="rounded">
-                <Image className="" src="/logo.png" alt="me" width={200} height={250} />
+              <div className="rounded grid justify-items-center">
+                <Image className="mx-auto" src="/logo.png" alt="me" width={100} height={125} />
 
-                <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">{content[language]['welcome']}</label>
-                <label className="block text-sm mb-2 ml-3" htmlFor="email">{content[language]['userrole']}</label>
+                <label className="block text-xl font-bold mt-2  text-center" htmlFor="email">{content[language]['welcome']}</label>
 
-                < div className="w-full justify-center">
-                  <RadioGroup className="p-4 flex " value={role} onChange={(e) => setRole(e)}>
-                    <RadioGroup.Option className="p-4 " value="admin" >
+                <label className="block text-sm mt-6 mb-1" htmlFor="email">{content[language]['userrole']}</label>
+
+                < div className="">
+                  <RadioGroup className="flex " value={role} onChange={(e) => setRole(e)}>
+                    <RadioGroup.Option className="px-4 flex justify-items-center" value="admin" >
                       <label >
                         <input
+                          className='mx-auto w-full'
                           type="radio"
                           name="role"
                           value="admin"
@@ -56,9 +58,10 @@ export default function welcome(props) {
                         <div className="">Admin</div>
                       </label>
                     </RadioGroup.Option>
-                    <RadioGroup.Option className=" p-4" value="respondent">
+                    <RadioGroup.Option className=" px-4" value="respondent">
                       <label>
                         <input
+                          className='mx-auto w-full'
                           type="radio"
                           name="role"
                           value="respondent"
@@ -71,13 +74,14 @@ export default function welcome(props) {
 
 
                 <br />
-                <label className="block text-sm font-bold mb-2 ml-3">{content[language]['choose_language']}</label>
+                <label className="block text-sm font-bold mt-6 mb-2 ml-3">{content[language]['choose_language']}</label>
 
                 <div className="flex mx-auto w-full justify-center">
-                  <RadioGroup className="p-4 flex " value={language} onChange={(e) => setLanguage(e)}>
-                    <RadioGroup.Option className="p-4 " value="bm" >
+                  <RadioGroup className=" flex " value={language} onChange={(e) => setLanguage(e)}>
+                    <RadioGroup.Option className="px-4 " value="bm" >
                       <label className="">
-                        <input className=""
+                        <input
+                          className='mx-auto w-full'
                           type="radio"
                           name="language"
                           value="bm"
@@ -85,7 +89,7 @@ export default function welcome(props) {
                         <div className="">Bahasa</div>
                       </label>
                     </RadioGroup.Option>
-                    <RadioGroup.Option className="p-4 " value="en" >
+                    <RadioGroup.Option className="px-4 " value="en" >
                       <label>
                         <input
                           type="radio"
@@ -100,7 +104,7 @@ export default function welcome(props) {
 
               </div>
 
-              <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Start</button>
+              <button className="m-2 mx-auto w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Start</button>
             </form>
           </section>
         </main>

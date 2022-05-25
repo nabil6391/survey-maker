@@ -146,7 +146,7 @@ export const filters = [
 
 export const content = {
     en: {
-        welcome: 'Welcome to CCRES',
+        welcome: 'WELCOME TO COMBAT CLIMATE READINESS SYSTEM (CCRES)',
         userrole: 'You are here as',
         choose_language: 'Choose your prefferred Language',
         logout: 'logout',
@@ -186,7 +186,7 @@ export const content = {
 
     },
     bm: {
-        welcome: 'Selamat Datang ke CCRES',
+        welcome: 'Selamat Datang ke COMBAT CLIMATE READINESS SYSTEM (CCRES)',
         userrole: 'Anda berada di sini sebagai',
         choose_language: 'Pilih Bahasa pilihan anda',
         logout: 'Log keluar',
