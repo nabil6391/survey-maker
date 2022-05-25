@@ -31,20 +31,20 @@ export default function welcome(props) {
 
   return (
     <React.Fragment>
-      <div className="font-AngkatanBersenjata body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')]  bg-cover" >
+      <div className="font-AngkatanBersenjata body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')] bg-cover" >
 
-        <main className="bg-white/60 max-w-lg mx-auto p-1 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
+        <main className="bg-white/60 max-w-lg mx-auto p-2 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
 
-          <section className="flex flex-col justify-center justify-items-center">
+          <section className="flex flex-row justify-center justify-items-center">
             <form onSubmit={handleSubmit}>
 
-              <div className="mb-6 pt-3 rounded">
+              <div className="rounded">
                 <Image className="" src="/logo.png" alt="me" width={200} height={250} />
 
                 <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">{content[language]['welcome']}</label>
                 <label className="block text-sm mb-2 ml-3" htmlFor="email">{content[language]['userrole']}</label>
 
-                < div className=" w-full justify-center">
+                < div className="w-full justify-center">
                   <RadioGroup className="p-4 flex " value={role} onChange={(e) => setRole(e)}>
                     <RadioGroup.Option className="p-4 " value="admin" >
                       <label >

@@ -27,8 +27,8 @@ export default function CategorySubSection(props) {
     const images = ['image0.jpeg', 'image1.jpeg', 'image2.jpeg', 'image3.jpeg']
 
     return (
-        <div className={`w-full flex-1 bg-[url('../public/image2.jpeg')] rounded-2xl`} >
-            <div className="max-w-4xl mx-auto  backdrop-blur bg-white/50 p-2">
+        <div className={`w-full flex-1 rounded-2xl`} >
+            <div className="max-w-4xl mx-auto  p-20">
                 <h1 >Category: {category.title}</h1>
                 {subcategories.filter(sc => sc.categoryId == category.id).map((subcategory) => {
                     return (
