@@ -212,11 +212,11 @@ export default function slug(props) {
           //Check if all data is present
 
           var asd = Object.entries(userData)
-          // if (asd.length == 0 || Object.entries(DemographicInfos).length != asd.length) {
-          // setErrorMessage("Please select all information")
-          // } else {
-          setCurrentStep(newStep);
-          // }
+          if (asd.length == 0 || Object.entries(DemographicInfos).length != asd.length) {
+            setErrorMessage("Please select all information")
+          } else {
+            setCurrentStep(newStep);
+          }
           break
         default:
           var categoryQuestions = questions.filter(question => question.categoryId == currentStep - 1).map(q => q.id);
