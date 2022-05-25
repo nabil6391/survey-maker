@@ -12,7 +12,7 @@ export default function EditQuestionComponent(props: { question: Question, index
   const questionId = question.id;
   const [itemOrder, setItemOrder] = useState(props.index);
   const [title, setTitle] = useState(question.title);
-  const [titleMy, setTitleMy] = useState(question.title);
+  const [titleMy, setTitleMy] = useState(question.titleMy);
 
   async function onDelete() {
     const response = await fetch(SERVER_URL + '/api/v1/questions/' + questionId, {
@@ -36,7 +36,7 @@ export default function EditQuestionComponent(props: { question: Question, index
         categoryId: question.categoryId,
         subcategoryId: question.subcategoryId,
         order: itemOrder,
-        titleMy: title,
+        titleMy: titleMy,
       }),
     });
     if (response.status == 200) {

@@ -15,6 +15,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { content, useLanguageContext, filters } from "../../context/LanguageContext"
 import Image from 'next/image';
 import { checkLanguage } from '../../util/withAuth';
+import bg from '../../public/image0.jpeg'
 
 export default function slug(props) {
   console.log("slug started")
@@ -46,7 +47,7 @@ export default function slug(props) {
   const [currentStep, setCurrentStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
   const [projectDetails, showProjectDetails] = useState(false);
-  const [consent, setConsent] = useState(false)
+  const [consent, setConsent] = useState(true)
 
   if (!consent) {
     return <div className='p-5 max-w-4xl mx-auto'>
@@ -99,10 +100,10 @@ export default function slug(props) {
                   </p>
                 </div>
                 <div className="mb-6 pt-3 rounded ">
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Project Leader: Hasan Al-Banna bin Mohamed</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">  {content[language]['project_leader']} Hasan Al-Banna bin Mohamed</label>
 
 
-                  <label className="block text-sm mb-2 ml-3" htmlFor="email">Name of co-researchers</label>
+                  <label className="block text-sm mb-2 ml-3" htmlFor="email">  {content[language]['name_researchers']}</label>
 
                   <div className='px-4'>
                     <li>Inderjit Singh a/l Tara Singh</li>
@@ -116,11 +117,10 @@ export default function slug(props) {
                   </div>
                   <br></br>
 
-                  <label className="block text-sm mb-2 ml-3" htmlFor="email">National Defence University of Malaysia, Sg Besi Camp
-                    hasanalbanna@upnm.edu.my</label>
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Research Field: Social Science</label>
+                  <label className="block text-sm mb-2 ml-3" htmlFor="email">  {content[language]['name_uni']}</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">  {content[language]['research_field']}</label>
 
-                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">Duration : 1 September 2019 – 31 May 2022</label>
+                  <label className="block text-sm font-bold mb-2 ml-3" htmlFor="email">  {content[language]['research_duration']}</label>
 
                   <div className="mt-4">
                     <button
@@ -138,31 +138,27 @@ export default function slug(props) {
         </Dialog >
       </Transition >
 
-      <h1 className='font-bold'>About Study</h1>
+      <h1 className='font-bold'> {content[language]['about_study']}</h1>
 
       <p>
-        You are invited to participate in a web-app online survey on Measurement of Intangible Human Dimension of Soldiers Leading Towards Military Command Climate Readiness conducted by the National Defence University of Malaysia (NDUM). This is a research project being conducted to examine the intangible human dimensions of soldiers. For this purpose, we would appreciate it if you could respond to the following questionnaire relating to morale, quality of life, and psychological factors. It should take approximately 20-30 minutes to complete. The Ministry of Education (MOE) has funded this study under the Fundamental Research Grant Scheme(FRGS/1/ 2019/SS03/UPNM/02/2).
+        {content[language]['about_study_desc']}
       </p>
       <br />
 
-      <h1 className='font-bold'>CONFIDENTIALITY</h1>
+      <h1 className='font-bold'>{content[language]['confidentiality']}</h1>
       <p>
-        We would like to assure you that your response would be treated as private and
-        CONFIDENTIAL and would only be used for this academic study.
-
-        We thank you very much for responding to our questionnaire despite your hectic
-        workload.
+        {content[language]['confidentiality_desc']}
       </p>
       <br />
       <YoutubeEmbed embedId="Ra5n4bjFO0g" />
       <br />
       <p>
-        ELECTRONIC CONSENT: Please select your choice below. Clicking on the “Agree” button indicates that :
+
       </p>
       <br />
       <ul>
-        <li>•	You have read the above information.</li>
-        <li>•	You voluntarily agree to participate. </li>
+        <li>•	{content[language]['agree_read_info']} </li>
+        <li>•	{content[language]['agree_voluntary']} </li>
       </ul>
 
       <br />
@@ -192,6 +188,7 @@ export default function slug(props) {
   steps.push(content[language]['complete'])
 
   const { userData, setUserData } = useStepperContext()
+
   const displayStep = (step) => {
     switch (step) {
       case 1:
@@ -205,6 +202,7 @@ export default function slug(props) {
     let newStep = currentStep;
     direction === "next" ? newStep++ : newStep--;
     // check if steps are within bounds
+
     if (newStep > 0 && newStep <= steps.length) {
 
       switch (currentStep) {
@@ -212,20 +210,20 @@ export default function slug(props) {
           //Check if all data is present
           var asd = Object.entries(userData)
           console.log(asd)
-          if (asd.length == 0 || filters.length != asd.length) {
-            var remaining = filters.filter(e => !asd.some(a => a[0] == e.id)).map(m => m.name)
-            console.log(remaining)
-            setErrorMessage("Please select all information \n" + JSON.stringify(remaining))
-          } else {
-            setCurrentStep(newStep);
-          }
+          // if (asd.length < filters.length) {
+          //   var remaining = filters.filter(e => !asd.some(a => a[0] == e.id)).map(m => m.name)
+          //   console.log(remaining)
+          //   setErrorMessage("Please select all information \n" + JSON.stringify(remaining))
+          // } else {
+          setCurrentStep(newStep);
+          // }
           break
         default:
-          var categoryQuestions = questions.filter(question => question.categoryId == currentStep - 1).map(q => q.id);
+          var categoryQuestions = questions.filter(question => question.categoryId == categories[currentStep - 2].id).map(q => q.id);
           var responses = Object.entries(userData["responses"] ?? [])
           var questionsAnswered = responses.filter(response => categoryQuestions.includes(parseInt(response[0]))).length
 
-          console.log(questionsAnswered, categoryQuestions.length)
+          console.log(responses, questionsAnswered, categoryQuestions.length)
           if (direction != "next") {
             setCurrentStep(newStep);
           } else if (questionsAnswered == categoryQuestions.length) {
@@ -274,103 +272,109 @@ export default function slug(props) {
   const questions = props.questions;
   const categories = props.categories;
   const subcategories = props.subcategories;
+  const images = ['/image0.jpeg', '/image1.jpeg', '/image2.jpeg', '/image3.jpeg', '/image0.jpeg', '/image1.jpeg', '/image2.jpeg', '/image3.jpeg']
 
-  return <div className=" bg-[url('../public/image0.jpeg')] bg-cover">
+  return <div className='h-screen' style={{
+    backgroundImage: `url(${images[currentStep - 1]})`,
+    width: '100%',
+    height: '100%',
+  }}>
+    <div>
+      <Layout>
 
-    <Layout>
+        <div className="bg-white/40 rounded-xl p-5 shadow-2xl max-w-4xl mx-auto backdrop-blur-lg">
+          {/* <User ></User> */}
+          <Transition appear show={errorMessage != ""} as={Fragment}>
+            <Dialog
+              as="div"
+              className="fixed inset-0 z-10 overflow-y-auto"
+              onClose={closeModal}
+            >
+              <div className="min-h-screen px-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <Dialog.Overlay className="fixed inset-0" />
+                </Transition.Child>
 
-      <div className="bg-white/50 rounded-xl p-5 shadow-2xl max-w-4xl mx-auto backdrop-blur-lg">
-        {/* <User ></User> */}
-        <Transition appear show={errorMessage != ""} as={Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 z-10 overflow-y-auto"
-            onClose={closeModal}
-          >
-            <div className="min-h-screen px-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Dialog.Overlay className="fixed inset-0" />
-              </Transition.Child>
-
-              {/* This element is to trick the browser into centering the modal contents. */}
-              <span
-                className="inline-block h-screen align-middle"
-                aria-hidden="true"
-              >
-                &#8203;
-              </span>
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    {content[language]['error']}
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      {errorMessage}
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                      onClick={closeModal}
+                {/* This element is to trick the browser into centering the modal contents. */}
+                <span
+                  className="inline-block h-screen align-middle"
+                  aria-hidden="true"
+                >
+                  &#8203;
+                </span>
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      {content[language]['okay']}
-                    </button>
-                  </div>
+                      {content[language]['error']}
+                    </Dialog.Title >
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        {errorMessage}
+                      </p>
+                    </div>
+
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                        onClick={closeModal}
+                      >
+                        {content[language]['okay']}
+                      </button>
+                    </div>
+                  </div >
+                </Transition.Child >
+              </div >
+            </Dialog >
+          </Transition >
+
+          {errorMessage}
+          < form onSubmit={handleSubmit} >
+
+            <div className="mx-auto pb-2 ">
+              {/* Stepper */}
+              <div className="horizontal container mt-5 ">
+                <Stepper steps={steps} currentStep={currentStep} />
+
+                <div className="p-4 py-10 ">
+                  {displayStep(currentStep)}
                 </div>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition>
-
-        {errorMessage}
-        <form onSubmit={handleSubmit} >
-
-          <div className="mx-auto pb-2 ">
-            {/* Stepper */}
-            <div className="horizontal container mt-5 ">
-              <Stepper steps={steps} currentStep={currentStep} />
-
-              <div className="p-4 py-10 ">
-                {displayStep(currentStep)}
               </div>
+
+              {/* navigation button */}
+              {currentStep !== steps.length && (
+                <StepperControl
+                  handleClick={handleClick}
+                  currentStep={currentStep}
+                  steps={steps}
+                />
+              )}
             </div>
 
-            {/* navigation button */}
-            {currentStep !== steps.length && (
-              <StepperControl
-                handleClick={handleClick}
-                currentStep={currentStep}
-                steps={steps}
-              />
-            )}
-          </div>
-
-        </form>
-      </div>
-    </Layout >
-  </div>
+          </form >
+        </div >
+      </Layout >
+    </div>
+  </div >
 }
 
 export async function getServerSideProps(context) {

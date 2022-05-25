@@ -227,8 +227,8 @@ export default function stats(props) {
   console.log(subCategoryValues)
 
   return (
-    <Layout>
-      <div className="prose">
+    <Layout >
+      <div className="prose bg-[url('../public/image1.jpeg')] bg-cover">
         <Tab.Group>
           <div>
             {/* Mobile filter dialog */}
@@ -452,33 +452,36 @@ export default function stats(props) {
                               {/* {JSON.stringify(selectedFilters)} */}
                               {/* {JSON.stringify(selectedUserData)} */}
 
-                              <div className='bg-white rounded-xl p-10 shadow-xl max-w-2xl m-2'>
+                              <div className='bg-white rounded-xl p-10 shadow-xl max-w-4xl m-2'>
                                 <h2 className='mx-auto text-xl font-bold'>Total Responses: {users.length}</h2>
                               </div>
 
                               {filters.map((filter) => {
                                 var barChartData = Object.entries(selectedUserData[filter.id]).map((e) => {
                                   return {
-                                    value: e[0],
+                                    value: optionName(filter.options.find(f => f.value == e[0])),
                                     count: selectedFilters[filter.id]?.includes(e[0]) && e[1],
                                   }
                                 }
                                 )
 
                                 return (
-                                  <div className='bg-white rounded-xl p-10 shadow-xl max-w-2xl m-2'>
+                                  <div className='bg-white rounded-xl p-2 md:p-10 shadow-xl max-w-4xl m-2'>
                                     <h2 className='mx-auto text-xl font-bold'>{filterName(filter)}</h2>
                                     <div className='grid grid-flow-row'>
-                                      <ResponsiveContainer width="50%" height={300}>
+                                      <ResponsiveContainer width="95%" height={300}>
                                         <BarChart
                                           data={barChartData}
                                         >
-                                          <XAxis dataKey="value" width={10} height={15} interval={0} />
+                                          <XAxis dataKey="value" width={10} height={15} interval={0} style={{
+                                            fontSize: '1rem',
+                                            fontFamily: 'Times New Roman',
+                                          }} />
 
                                           {/* <YAxis /> */}
                                           <Tooltip />
 
-                                          <Bar dataKey="count" fill="#30CDCD" barSize={50} label>
+                                          <Bar dataKey="count" fill="#30CDCD" barSize={50}>
                                             {
                                               barChartData.map((entry, index) => {
                                                 return <Cell fill={barColors[index]} />;
@@ -494,9 +497,10 @@ export default function stats(props) {
 
 
                                       <PieChart width={730} height={250}>
-                                        <Legend verticalAlign="top" height={36} />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                        <br></br>
                                         <Tooltip />
-                                        <Pie data={barChartData} dataKey="count" nameKey="value" fill="#8884d8" label >
+                                        <Pie data={barChartData} dataKey="count" nameKey="value" fill="#8884d8"  >
                                           {
                                             barChartData.map((entry, index) => {
                                               return <Cell fill={barColors[index]} />;
@@ -535,13 +539,14 @@ export default function stats(props) {
                                   </div>
                                 );
                               })}</div>}
-                            {idx == 2 && <>
+                            {idx == 2 && <div className="bg-white rounded-xl p-5">
                               <h2 className='text-2xl font-extrabold text-gray-900 sm:pr-12'>All Categories</h2>
                               <br />
                               <ResponsiveContainer width="100%" height={300}>
                                 <RadarChart height={500} width={500}
                                   outerRadius="80%" data={categorySpiperData}>
                                   <PolarGrid />
+                                  <Tooltip />
                                   <PolarAngleAxis dataKey="name" />
                                   <PolarRadiusAxis />
                                   <Radar dataKey="x" stroke="green"
@@ -550,7 +555,7 @@ export default function stats(props) {
                               </ResponsiveContainer>
 
                               {categories.map((category) => {
-                                const subcategorySpiperData = subcategories.map((category) => {
+                                const subcategorySpiperData = subcategories.filter(f => f.categoryId == category.id).map((category) => {
                                   var info = { name: subcategoryTitle(category), x: subCategoryValues[category.id] / subcategoryCountsMap[category.id] }
                                   return info
                                 })
@@ -563,6 +568,7 @@ export default function stats(props) {
                                       <RadarChart height={500} width={500}
                                         outerRadius="80%" data={subcategorySpiperData}>
                                         <PolarGrid />
+                                        <Tooltip />
                                         <PolarAngleAxis dataKey="name" />
                                         <PolarRadiusAxis />
                                         <Radar dataKey="x" stroke="green"
@@ -573,9 +579,9 @@ export default function stats(props) {
                                   </div>
                                 );
                               })}
-                            </>}
+                            </div>}
 
-                            {idx == 3 && <>
+                            {idx == 3 && <div className="bg-white rounded-xl p-5">
                               {categories.map((category) => {
                                 var asd = (categoryValues[category.id] / categoryCountsMap[category.id]).round(2)
                                 return (
@@ -603,7 +609,7 @@ export default function stats(props) {
                                   </div>
                                 );
                               })}
-                            </>}
+                            </div>}
                           </Tab.Panel>
                         ))}
                       </Tab.Panels>

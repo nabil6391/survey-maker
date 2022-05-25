@@ -23,8 +23,7 @@ export default function CategorySubSection(props) {
         setUserData(newData);
     }
     const questionValue = userData["responses"] ?? []
-
-    const images = ['image0.jpeg', 'image1.jpeg', 'image2.jpeg', 'image3.jpeg']
+    console.log(questionValue)
 
     return (
         <div className={`w-full flex-1 rounded-2xl`} >
@@ -40,16 +39,15 @@ export default function CategorySubSection(props) {
                                         {question.title}
                                         <div className="flex mx-auto w-full justify-center">
                                             <div className="my-auto">Disagree</div>
-                                            <RadioGroup className="px-4 flex" value={questionValue[question.id]} onChange={(e) => updateResponseValues(question.id, parseInt(e) + 1)}>
+
+                                            <RadioGroup className="px-4 flex" value={questionValue[question.id]} onChange={(e) => updateResponseValues(question.id, parseInt(e))}>
                                                 {answers.map((name, index) => (
-                                                    <RadioGroup.Option value={index} name={name} >
-                                                        <label className="p-10" key={"q" + index}>
+                                                    <RadioGroup.Option value={index + 1} name={name} >
+                                                        <label className="p-10" key={"q" + question.id}>
                                                             <div className="p-2">{index + 1}</div>
                                                             <div><input
                                                                 className="m-2"
                                                                 type="radio"
-                                                                name={question.id}
-                                                                value={index}
                                                             /></div>
                                                         </label>
                                                     </RadioGroup.Option>

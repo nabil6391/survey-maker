@@ -172,7 +172,7 @@ export default function dashboard(props) {
                       {
                         categories.map((category, catIndex) => {
                           return (
-                            <div className='bg-white m-2 rounded-xl p-5 shadow-2xl max-w-2xl mx-auto' key={"c" + catIndex} id={category.title}>
+                            <div className='bg-white m-2 rounded-xl p-5 shadow-2xl max-w-2xl mx-auto' key={"c" + category.id} id={category.title}>
                               <EditCategoryComponent
                                 question={category}
                                 index={catIndex}
@@ -180,7 +180,7 @@ export default function dashboard(props) {
                               {subcategories.filter(sc => sc.categoryId == category.id).map((subcategory, subcatIndex) => {
 
                                 return (
-                                  <div className='bg-gray-200 p-5  rounded-xl my-5' key={"sc" + subcatIndex} id={subcategory.title}>
+                                  <div className='bg-gray-200 p-5  rounded-xl my-5' key={"sc" + subcategory.id} id={subcategory.title}>
                                     <EditSubCategoryComponent
                                       question={subcategory}
                                       surveyId={survey.id}
@@ -189,7 +189,7 @@ export default function dashboard(props) {
                                     <br />
                                     {questions.filter(question => question.subcategoryId == subcategory.id).map((question, questionIndex) => {
                                       return (
-                                        <div className='bg-white p-5  rounded-xl my-5' key={"q" + questionIndex}>
+                                        <div className='bg-white p-5  rounded-xl my-5' key={"q" + question.id}>
                                           <EditQuestionComponent
                                             question={question}
                                             index={questionIndex}

@@ -33,7 +33,7 @@ export default function welcome(props) {
     <React.Fragment>
       <div className="font-AngkatanBersenjata body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0 bg-[url('../public/image1.jpeg')] bg-cover" >
 
-        <main className="bg-white/50 max-w-lg mx-auto p-2 my-10 rounded-lg shadow-2xl backdrop-blur-xl ">
+        <main className="bg-white/50 max-w-lg mx-auto p-2 my-10 rounded-lg shadow-2xl backdrop-blur ">
 
           <section className="">
             <form onSubmit={handleSubmit}>
