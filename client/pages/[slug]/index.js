@@ -47,7 +47,7 @@ export default function slug(props) {
   const [currentStep, setCurrentStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
   const [projectDetails, showProjectDetails] = useState(false);
-  const [consent, setConsent] = useState(true)
+  const [consent, setConsent] = useState(false)
 
   if (!consent) {
     return <div className='p-5 max-w-4xl mx-auto'>
@@ -210,13 +210,13 @@ export default function slug(props) {
           //Check if all data is present
           var asd = Object.entries(userData)
           console.log(asd)
-          // if (asd.length < filters.length) {
-          //   var remaining = filters.filter(e => !asd.some(a => a[0] == e.id)).map(m => m.name)
-          //   console.log(remaining)
-          //   setErrorMessage("Please select all information \n" + JSON.stringify(remaining))
-          // } else {
-          setCurrentStep(newStep);
-          // }
+          if (asd.length < filters.length) {
+            var remaining = filters.filter(e => !asd.some(a => a[0] == e.id)).map(m => m.name)
+            console.log(remaining)
+            setErrorMessage("Please select all information \n" + JSON.stringify(remaining))
+          } else {
+            setCurrentStep(newStep);
+          }
           break
         default:
           var categoryQuestions = questions.filter(question => question.categoryId == categories[currentStep - 2].id).map(q => q.id);
