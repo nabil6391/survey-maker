@@ -183,7 +183,7 @@ export default function slug(props) {
     content[language]['profile_information'],
   ];
   props.categories.forEach(element => {
-    steps.push(element.title)
+    steps.push(categoryTitle(element))
   });
   steps.push(content[language]['complete'])
 
