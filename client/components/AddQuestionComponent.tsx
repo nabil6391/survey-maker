@@ -5,6 +5,7 @@ import { SubCategory, Survey } from '../util/types';
 export default function AddQuestionComponent(props: { survey: Survey, subcategory: SubCategory, index: number }) {
   const [surveyId, setSurveyId] = useState(props.survey.id);
   const [title, setTitle] = useState('I found the content..');
+  const [titleMy, setTitleMy] = useState('I found the content..');
 
   async function onSubmitFunction() {
     const response = await fetch(SERVER_URL + '/api/v1/questions', {
@@ -16,7 +17,7 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
         subcategoryId: props.subcategory.id,
         order: props.index,
         title: title,
-        titleMy: title,
+        titleMy: titleMy,
       }),
     });
     if (response.status == 201) {
@@ -57,7 +58,7 @@ export default function AddQuestionComponent(props: { survey: Survey, subcategor
             id="last-name"
             value={title}
             onChange={(e) => {
-              setTitle(e.currentTarget.value);
+              setTitleMy(e.currentTarget.value);
             }}
             className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md outline outline-gray-300  p-2"
           />

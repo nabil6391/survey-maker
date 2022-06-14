@@ -10,7 +10,7 @@ export type Survey = {
   userId: number;
   createdAt: Date;
   title: string;
-  customSlug: string;
+  slug: string;
   published: boolean;
 };
 

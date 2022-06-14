@@ -14,6 +14,7 @@ import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 import { SERVER_URL } from '../_app';
 import { content, useLanguageContext } from "../../context/LanguageContext"
+import EditSurveyComponent from '../../components/EditSurveyComponent';
 
 export default function dashboard(props) {
   const user = props.user;
@@ -111,6 +112,7 @@ export default function dashboard(props) {
                 <div>
                   <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
                   <h4 className="text-xl" >www.ccres.co/{survey.slug}</h4>
+                  <EditSurveyComponent survey={survey} />
                 </div>
 
                 <div className="flex items-center">

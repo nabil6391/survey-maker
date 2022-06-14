@@ -8,11 +8,8 @@ import {
   Legend,
 } from 'recharts';
 
-export default function BarChartComponent(props) {
-  const responses = props.responses;
-  const subcategory = props.subcategory;
-  const questionsMap = props.questionsMap;
-
+export default function BarChartComponent({ responses, subcategory, questionsMap, colors }) {
+  console.log(colors)
   const status = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
 
   const responseValues = responses.filter((e) => questionsMap[e.questionId].subcategoryId == subcategory.id).map((r) => {
@@ -43,7 +40,7 @@ export default function BarChartComponent(props) {
 
         <Tooltip />
 
-        <Bar dataKey="n" fill="#30CDCD" />
+        <Bar dataKey="n" fill={colors} />
       </BarChart>
     </ResponsiveContainer>
   </>

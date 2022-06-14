@@ -112,34 +112,83 @@ export default function stats(props) {
     console.log('download')
   }
 
-  const exportCsv = function (data) {
+  const exportCsv = function (users, questions, responses) {
 
     // Empty array for storing the values
     // headers = ['Respondent', filers, questions arranged by category and subcategory];
 
     // Empty array for storing the values
-    csvRows = [];
+    const csvRows = [];
 
     // Headers is basically a keys of an
     // object which is id, name, and
     // profession
-    const headers = Object.keys(data);
+    const headers = []
+    headers.push("RepondentId")
+
+    filters.forEach((filter) => {
+      headers.push(filter.id)
+    })
+
+
+    questions.sort((a, b) => {
+      if (a.categoryId === b.categoryId) {
+        // Price is only important when cities are the same
+        return b.subcategoryId - a.subcategoryId;
+      }
+      return a.categoryId - b.categoryId
+    });
+
+    var uniqueCategories = [... new Set(questions.map((o) => o.categoryId))]
+    var uniqueSubCategories = [... new Set(questions.map((o) => o.subcategoryId))]
+
+
+    questions.forEach((q) => {
+      var indexC = uniqueCategories.indexOf(q.categoryId) + 1
+      var indexSC = uniqueSubCategories.indexOf(q.subcategoryId) + 1
+      var title = "C" + indexC + ":SC" + indexSC + ":" + q.itemOrder
+      headers.push(title)
+    })
 
     // As for making csv format, headers
     // must be separated by comma and
     // pushing it into array
     csvRows.push(headers.join(','));
 
-    // Pushing Object values into array
-    // with comma separation
-    const values = Object.values(data).join(',');
-    csvRows.push(values)
+    for (var j = 0; j < users.length; j++) {
+      var user1 = users[j]
 
-    // Returning the array joining with new line
-    csvRows.join('\n')
+      const data = []
+      data.push(user1.userId)
+      filters.forEach((filter) => {
+        data.push(user1[filter.id])
+      })
+
+      questions.forEach((q) => {
+        console.log(q)
+        var response = responses.find(o => o.userId == user1.userId && o.questionId == q.id)
+        if (response != undefined)
+          data.push(response.responseValue)
+        else
+          data.push('')
+      })
+      console.log(data)
+      // Pushing Object values into array
+      // with comma separation
+      const values = data.join(',');
+      csvRows.push(values)
+      // Returning the array joining with new line
+    }
+
     console.log(csvRows)
-
+    console.log(arrayToCsv(csvRows))
     download(csvRows)
+  }
+
+  /** Convert a 2D array into a CSV string
+ */
+  function arrayToCsv(data) {
+    return data.join('\r\n');  // rows starting on new lines
   }
 
   function updateFilter(id, e) {
@@ -364,7 +413,7 @@ export default function stats(props) {
                         <button
                           type="button"
                           className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 "
-                          onClick={() => exportCsv()}
+                          onClick={() => exportCsv(users, questions, responses)}
                         >
                           <span>    Export</span>
                         </button>
@@ -451,6 +500,9 @@ export default function stats(props) {
                             {idx == 0 && <>
                               {/* {JSON.stringify(selectedFilters)} */}
                               {/* {JSON.stringify(selectedUserData)} */}
+                              {/* {JSON.stringify(users)} */}
+                              {/* {JSON.stringify(responses)} */}
+                              {JSON.stringify(questions)}
 
                               <div className='bg-white rounded-xl p-10 shadow-xl max-w-4xl m-2'>
                                 <h2 className='mx-auto text-xl font-bold'>Total Responses: {users.length}</h2>
@@ -494,8 +546,6 @@ export default function stats(props) {
 
                                       <br></br>
 
-
-
                                       <PieChart width={730} height={250}>
                                         <Legend verticalAlign="bottom" height={36} />
                                         <br></br>
@@ -521,7 +571,7 @@ export default function stats(props) {
                                   <div >
                                     <h2 className='text-2xl font-extrabold text-gray-900 sm:pr-12'>{subcategoryTitle(category)}</h2>
 
-                                    {subcategories.filter((subcategory) => subcategory.categoryId == category.id).map((subcategory) => {
+                                    {subcategories.filter((subcategory) => subcategory.categoryId == category.id).map((subcategory, i) => {
                                       return (
                                         <div>
                                           <br></br>
@@ -531,6 +581,7 @@ export default function stats(props) {
                                             responses={responses}
                                             subcategory={subcategory}
                                             questionsMap={questionsMap}
+                                            colors={barColors[Math.floor(Math.random() * 101)]}
                                           />
 
                                         </div>
