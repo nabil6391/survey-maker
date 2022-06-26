@@ -1,0 +1,47 @@
+.page {
+  margin: auto;
+  background: white;
+  position: relative;
+
+  width: 210mm;
+  height: 297mm;
+
+  /* padding: 32px; */
+  filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+}
+
+@page {
+  size: A4;
+  /* margin: 0; */
+}
+
+.downloadBtn {
+  position: absolute;
+  top: 0;
+}
+
+@media print {
+  .print-button {
+    display: none;
+  }
+
+  .content div {
+    break-after: always;
+  }
+
+  .body {
+    font-size: "16px";
+    color: "lightgrey";
+  }
+
+  .no-break-inside {
+    /* // apply this class to every component that shouldn't be cut off between to pages of your PDF */
+    break-inside: "avoid";
+    color: red;
+  }
+
+  .break-before {
+    /* // apply this class to every component that should always display on next page */
+    break-before: "always";
+  }
+}

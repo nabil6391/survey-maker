@@ -30,18 +30,21 @@ export default function BarChartComponent({ responses, subcategory, questionsMap
     barChartData.push(countByValue);
   }
 
-  return <>
-    <ResponsiveContainer width={600} height={400}>
-      <BarChart
-        data={barChartData}
-        margin={{ top: 10, right: 10, left: 10, bottom: 50 }}
-      >
-        <XAxis dataKey="value" width={10} height={12} interval={0} />
+  return <BarChart
+    width={600} height={400}
+    data={barChartData}
+    margin={{ top: 10, right: 10, left: 10, bottom: 50 }}
+  >
+    <YAxis />
+    <XAxis dataKey="value" width={10} height={15} interval={0} style={{
+      fontSize: '1rem',
+      fontFamily: 'Times New Roman',
+    }} />
 
-        <Tooltip />
+    {/* <YAxis /> */}
+    <Tooltip />
+    <Bar dataKey="n" barSize={50} fill={colors} isAnimationActive={false} label>
 
-        <Bar dataKey="n" fill={colors} />
-      </BarChart>
-    </ResponsiveContainer>
-  </>
+    </Bar>
+  </BarChart>
 }

@@ -1,5 +1,6 @@
 import Layout from '../../components/Layout';
 import BarChartSubCategoryComponent from '../../components/BarChartSubCategoryComponent';
+import ColorValue from '../../components/ColorValue';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
 import { Fragment, useState } from 'react'
@@ -82,12 +83,6 @@ export default function stats(props) {
   const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters)
   const { language } = useLanguageContext()
 
-  function goToThanks() {
-
-
-  }
-
-
   const download = function (data) {
 
     // Creating a Blob for having a csv file format
@@ -115,21 +110,13 @@ export default function stats(props) {
   const exportCsv = function (users, questions, responses) {
 
     // Empty array for storing the values
-    // headers = ['Respondent', filers, questions arranged by category and subcategory];
-
-    // Empty array for storing the values
     const csvRows = [];
-
-    // Headers is basically a keys of an
-    // object which is id, name, and
-    // profession
     const headers = []
     headers.push("RepondentId")
 
     filters.forEach((filter) => {
       headers.push(filter.id)
     })
-
 
     questions.sort((a, b) => {
       if (a.categoryId === b.categoryId) {
@@ -142,7 +129,6 @@ export default function stats(props) {
     var uniqueCategories = [... new Set(questions.map((o) => o.categoryId))]
     var uniqueSubCategories = [... new Set(questions.map((o) => o.subcategoryId))]
 
-
     questions.forEach((q) => {
       var indexC = uniqueCategories.indexOf(q.categoryId) + 1
       var indexSC = uniqueSubCategories.indexOf(q.subcategoryId) + 1
@@ -150,9 +136,6 @@ export default function stats(props) {
       headers.push(title)
     })
 
-    // As for making csv format, headers
-    // must be separated by comma and
-    // pushing it into array
     csvRows.push(headers.join(','));
 
     for (var j = 0; j < users.length; j++) {
@@ -173,11 +156,8 @@ export default function stats(props) {
           data.push('')
       })
       console.log(data)
-      // Pushing Object values into array
-      // with comma separation
       const values = data.join(',');
       csvRows.push(values)
-      // Returning the array joining with new line
     }
 
     console.log(csvRows)
@@ -640,9 +620,7 @@ export default function stats(props) {
                                     <h2 className='text-2xl font-extrabold text-gray-900 sm:pr-12'>{subcategoryTitle(category)}</h2>
                                     Value: {asd}
 
-                                    {asd < 2.5 && <>  <div className='bg-red-500'><div className='w-12 h-8'></div></div></>}
-                                    {asd >= 2.5 && asd < 4.5 && <>  <div className='bg-yellow-500'><div className='w-12 h-8'></div></div></>}
-                                    {asd >= 4.5 && <>  <div className='bg-green-500'><div className='w-24 h-8'></div></div></>}
+                                    < ColorValue value={asd} />
 
                                     {subcategories.filter((subcategory) => subcategory.categoryId == category.id).map((subcategory) => {
                                       var asd = (subCategoryValues[subcategory.id] / subcategoryCountsMap[subcategory.id]).round(2)
@@ -651,9 +629,7 @@ export default function stats(props) {
                                           <br></br>
                                           <h2 className='text-2xl text-gray-900 sm:pr-12'>{subcategoryTitle(subcategory)}</h2>
                                           Value: {asd}
-                                          {asd < 2.5 && <>  <div className='bg-red-500'><div className='w-24 h-8'></div></div></>}
-                                          {asd >= 2.5 && asd < 4.5 && <>  <div className='bg-yellow-500'><div className='w-24 h-8'></div></div></>}
-                                          {asd >= 4.5 && <>  <div className='bg-green-500'><div className='w-24 h-8'></div></div></>}
+                                          < ColorValue value={asd} />
                                         </div>
                                       );
                                     })}

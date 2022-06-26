@@ -8,14 +8,11 @@ import YoutubeEmbed from '../../components/YoutubeEmbed';
 import { useRouter } from 'next/router';
 import { Demographic } from '../../components/Demographic'
 import CategorySubSection from '../../components/CategorySubSection'
-import User from '../../components/User';
 import { useStepperContext } from "../../context/StepperContext";
 import { SERVER_URL } from '../_app';
 import { Dialog, Transition } from '@headlessui/react';
-import { content, useLanguageContext, filters } from "../../context/LanguageContext"
-import Image from 'next/image';
+import { content, useLanguageContext, filters, categoryTitle } from "../../context/LanguageContext"
 import { checkLanguage } from '../../util/withAuth';
-import bg from '../../public/image0.jpeg'
 
 export default function slug(props) {
   console.log("slug started")
