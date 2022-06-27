@@ -4,10 +4,10 @@
   position: relative;
 
   width: 210mm;
-  height: 297mm;
+  height: 267mm;
 
   /* padding: 32px; */
-  filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+  /* filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)); */
 }
 
 @page {

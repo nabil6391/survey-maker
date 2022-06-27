@@ -1,8 +1,11 @@
 import Layout from '../../components/Layout';
+
+import Link from 'next/link';
 import BarChartSubCategoryComponent from '../../components/BarChartSubCategoryComponent';
 import ColorValue from '../../components/ColorValue';
 import { getAuthSession } from '../../util/withAuth';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
@@ -70,6 +73,7 @@ function classNames(...classes) {
 }
 
 export default function stats(props) {
+  const router = useRouter()
   const survey = props.survey;
   const questions = props.questions;
   const categories = props.categories;
@@ -87,7 +91,7 @@ export default function stats(props) {
 
     // Creating a Blob for having a csv file format
     // and passing the data with type
-    const blob = new Blob([data], { type: 'text/csv' });
+    const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
 
     // Creating an object for downloading url
     const url = window.URL.createObjectURL(blob)
@@ -160,9 +164,7 @@ export default function stats(props) {
       csvRows.push(values)
     }
 
-    console.log(csvRows)
-    console.log(arrayToCsv(csvRows))
-    download(csvRows)
+    download(arrayToCsv(csvRows))
   }
 
   /** Convert a 2D array into a CSV string
@@ -373,17 +375,15 @@ export default function stats(props) {
                   ))}
                 </Tab.List>
                 <div className="flex items-center">
-                  {/* <Menu as="div" className="relative inline-block text-left">
-                  <div>
-                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                      Print
-                      <ChevronDownIcon
-                        className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                    </Menu.Button>
-                  </div>
-                </Menu> */}
+                  <Menu as="div" className="relative inline-block text-left">
+                    <div>
+                      <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                        <Link href={encodeURIComponent(`${router.asPath}?DBar=${true}&DPie=${true}&mmBar=${true}&mmRadar=${true}&Color=${true}`)}>
+                          <a className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 "> Print</a>
+                        </Link>
+                      </Menu.Button>
+                    </div>
+                  </Menu>
                   <Menu as="div" className="relative inline-block text-left">
                     <div>
                       <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
@@ -482,7 +482,6 @@ export default function stats(props) {
                               {/* {JSON.stringify(selectedUserData)} */}
                               {/* {JSON.stringify(users)} */}
                               {/* {JSON.stringify(responses)} */}
-                              {JSON.stringify(questions)}
 
                               <div className='bg-white rounded-xl p-10 shadow-xl max-w-4xl m-2'>
                                 <h2 className='mx-auto text-xl font-bold'>Total Responses: {users.length}</h2>

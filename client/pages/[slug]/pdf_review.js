@@ -79,7 +79,7 @@ export default function pdf_review(props) {
   const responses = props.responses;
   const users = props.users;
 
-  const { DBar, DPie, mmBar, mmRadar, Color } = router.query
+  const { DBar, DPie, mmBar, mmRadar, Color, print } = router.query
 
   console.log(router.query, DBar, DPie, mmBar)
 
@@ -339,7 +339,8 @@ export default function pdf_review(props) {
                       Color
                     </label>
                   </div>
-                  <a href={`/api/pdf?url=${encodeURIComponent(`${router.asPath}?DBar=${mDBar}&DPie=${mDPie}&mmBar=${mBar}&mmRadar=${mRadar}&Color=${mColor})`)}`} download="generated_pdf.pdf" className="block text-black" id=''>Generate</a>
+
+                  <a href={`/api/pdf?url=${encodeURIComponent(`${router.asPath}?DBar=${mDBar}&DPie=${mDPie}&mmBar=${mBar}&mmRadar=${mRadar}&Color=${mColor}&print=true`)}`} download="generated_pdf.pdf" className="block text-black" id=''>Generate</a>
                 </div>
               </div>
             </Transition.Child>
@@ -348,13 +349,13 @@ export default function pdf_review(props) {
       </Transition >
 
       <div className="bg-white pl-5 pr-5" width="210mm">
-        <button
+        {print != 'true' && <button
           type="button"
           className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 print:hidden"
           onClick={() => { setDialogOpen(true) }}
         >
           Print
-        </button>
+        </button>}
         <Tab.Group>
           <div>
 
@@ -363,11 +364,10 @@ export default function pdf_review(props) {
                 <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">{survey.title}</h1>
               </div>
 
-              <div>Date of output generated : {new Date().today}</div>
+              <div>Date of output generated : {new Date().toLocaleString()}</div>
               <div>Total Responses: {users.length}</div>
               <br></br>
               <h2 className='mx-auto text-xl font-bold'>Statistics Results</h2>
-
 
               <section aria-labelledby="products-heading" className="pt-6 pb-24">
                 <div >
