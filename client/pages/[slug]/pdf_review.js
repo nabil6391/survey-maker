@@ -15,7 +15,8 @@ import {
   Pie,
   PieChart,
   Cell,
-  Global
+  Global,
+  LabelList
 } from 'recharts';
 
 import { SERVER_URL } from '../_app';
@@ -90,7 +91,7 @@ export default function pdf_review(props) {
   const [mColor, setColor] = useState(Color === 'true' ?? true)
 
 
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(true)
 
   console.log(mDBar, mBar, mDPie)
 
@@ -384,16 +385,16 @@ export default function pdf_review(props) {
 
                       return (
                         <div className='break-inside-avoid' >
-                          <h2 className='mx-auto text-xl font-bold'>A{index + 1}. {filterName(filter)}</h2>
-                          <div className='grid grid-flow-row' width={600} height={550} >
-                            {mDBar && <div className='' >
+                          <h2 className='text-xl font-bold'>A{index + 1}. {filterName(filter)}</h2>
+                          <div height={550} >
+                            {mDBar && <div className=' -mx-12' >
                               <BarChart
                                 data={barChartData}
-                                width={600} height={250}
+                                width={700} height={250}
                               >
                                 <YAxis />
                                 <XAxis dataKey="value" width={10} height={15} interval={0} style={{
-                                  fontSize: '1rem',
+                                  fontSize: '13px',
                                   fontFamily: 'Times New Roman',
                                 }} />
 
@@ -401,7 +402,7 @@ export default function pdf_review(props) {
                                 <Bar dataKey="count" barSize={50} isAnimationActive={false} label>
                                   {
                                     barChartData.map((entry, index) => {
-                                      return <Cell fill={barColors[index]} />;
+                                      return <Cell fill={barColors[index]} label />;
                                     })
                                   }
                                 </Bar>
@@ -415,7 +416,7 @@ export default function pdf_review(props) {
 
                             <br></br>
 
-                            {mDPie && < PieChart width={600} height={250} >
+                            {mDPie && < PieChart width={600} height={350} >
                               <Legend verticalAlign="bottom" height={36} />
                               <br></br>
                               <Tooltip />
@@ -438,7 +439,7 @@ export default function pdf_review(props) {
                     <h2 className='text-2xl font-extrabold text-gray-900 '>Part B. Results by Module</h2>
                     {mBar && categories.map((category, catIndex) => {
                       return (
-                        <div className="bg-white rounded-xl">
+                        <div className="bg-white rounded-xl ">
                           <h2 className='text-2xl font-extrabold text-gray-900 sm:pr-12'>B{catIndex + 1}. {subcategoryTitle(category)}</h2>
 
 
@@ -448,12 +449,15 @@ export default function pdf_review(props) {
                                 <br></br>
                                 <h2 className='text-2xl text-gray-900 sm:pr-12'>B{catIndex + 1}.{subCIndex + 1}. {subcategoryTitle(subcategory)}</h2>
 
-                                <BarChartSubCategoryComponent
-                                  responses={responses}
-                                  subcategory={subcategory}
-                                  questionsMap={questionsMap}
-                                  colors={barColors[Math.floor(Math.random() * 101)]}
-                                />
+                                <div className='-mx-12'>
+
+                                  <BarChartSubCategoryComponent
+                                    responses={responses}
+                                    subcategory={subcategory}
+                                    questionsMap={questionsMap}
+                                    colors={barColors[Math.floor(Math.random() * 101)]}
+                                  />
+                                </div>
 
                               </div>
                             );
@@ -471,8 +475,8 @@ export default function pdf_review(props) {
                         <Tooltip />
                         <PolarAngleAxis dataKey="name" />
                         <PolarRadiusAxis angle={45} domain={[0, 5]} tick={1} type='number' tickCount={5} />
-                        <Radar dataKey="x" stroke="green" isAnimationActive={false} label
-                          fill="green" fillOpacity={0.5} />
+                        <Radar dataKey="x" stroke="green" isAnimationActive={false} fill="green" fillOpacity={0.5} dot={true} label={{ angle: 0 }} />
+                        <LabelList dataKey="x" />
                       </RadarChart>
                     </div>}
 
@@ -499,7 +503,7 @@ export default function pdf_review(props) {
                             <Tooltip />
                             <PolarAngleAxis dataKey="name" />
                             <PolarRadiusAxis angle={45} domain={[0, 5]} tick={1} type='number' tickCount={5} />
-                            <Radar dataKey="x" stroke="green" isAnimationActive={false} label
+                            <Radar dataKey="x" stroke="green" isAnimationActive={false} label={{ angle: 0 }}
                               fill="green" fillOpacity={0.5} />
                           </RadarChart>
 

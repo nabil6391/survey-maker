@@ -378,7 +378,7 @@ export default function stats(props) {
                   <Menu as="div" className="relative inline-block text-left">
                     <div>
                       <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                        <Link href={encodeURIComponent(`${router.asPath}?DBar=${true}&DPie=${true}&mmBar=${true}&mmRadar=${true}&Color=${true}`)}>
+                        <Link href={`/${survey.slug}/pdf_review?DBar=${true}&DPie=${true}&mmBar=${true}&mmRadar=${true}&Color=${true}`}>
                           <a className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 "> Print</a>
                         </Link>
                       </Menu.Button>

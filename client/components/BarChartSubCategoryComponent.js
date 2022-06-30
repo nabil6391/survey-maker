@@ -31,7 +31,7 @@ export default function BarChartComponent({ responses, subcategory, questionsMap
   }
 
   return <BarChart
-    width={600} height={400}
+    width={700} height={400}
     data={barChartData}
     margin={{ top: 10, right: 10, left: 10, bottom: 50 }}
   >
@@ -43,7 +43,7 @@ export default function BarChartComponent({ responses, subcategory, questionsMap
 
     {/* <YAxis /> */}
     <Tooltip />
-    <Bar dataKey="n" barSize={50} fill={colors} isAnimationActive={false} label>
+    <Bar dataKey="n" barSize={50} fill={colors} isAnimationActive={false} >
 
     </Bar>
   </BarChart>
