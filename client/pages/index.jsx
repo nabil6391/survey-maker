@@ -7,10 +7,12 @@ import axios from 'axios';
 import { SERVER_URL } from "./_app";
 import { createContext, useContext, useState } from "react";
 import { content, useLanguageContext } from "../context/LanguageContext"
+import { Dialog, Transition, Fragment } from '@headlessui/react'
 
 export default function Home(props) {
   const { language } = useLanguageContext();
 
+  const [checkSurvey, setCheck] = useState(null)
   checkLanguage()
 
   async function onDelete(survey) {
@@ -25,9 +27,65 @@ export default function Home(props) {
 
 
   return (
+
     <Layout username={props.user.username}>
 
       <div className="body-bg pt-8 pb-6 px-2 md:px-0 ">
+
+        <Transition appear show={checkSurvey != null} as={Fragment}>
+          <Dialog as="div"
+            className="fixed inset-0 z-10 overflow-y-auto" onClose={() => setCheck(null)}>
+            <div className="min-h-screen px-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Dialog.Overlay className="fixed inset-0" />
+              </Transition.Child>
+
+              {/* This element is to trick the browser into centering the modal contents. */}
+              <span
+                className="inline-block h-screen align-middle"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div className="bg-white inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform shadow-xl rounded-2xl">
+
+                  <div className="mb-6 pt-3 rounded flec flex-col">
+                    <Dialog.Title>Delete Survey</Dialog.Title>
+
+                    <p className='py-5'>
+                      Are you sure you want to delete this survey?
+                    </p>
+
+                    <button
+                      className="outline outline-offset-4 outline-1 mt-3 w-full rounded-md border border-gray-300 shadow-sm px-4  bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={() => setCheck(null)}>Cancel</button>
+                    <button
+                      className="bg-purple-500 outline outline-offset-4 outline-1 mt-3 w-full rounded-md border shadow-sm px-4  text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={() => onDelete(checkSurvey)}>Delete</button>
+                  </div>
+                </div>
+              </Transition.Child>
+            </div>
+          </Dialog>
+        </Transition>
 
         <div class="relative flex px-5 items-center ">
           <div class="flex-grow border-t border-gray-400"></div>
@@ -69,7 +127,7 @@ export default function Home(props) {
                       <button
                         type="button"
                         className="outline outline-offset-4 outline-1 mt-3 w-full rounded-md border border-gray-300 shadow-sm px-4  bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        onClick={() => onDelete(survey)}
+                        onClick={() => setCheck(survey)}
                       >
                         Delete
                       </button>
