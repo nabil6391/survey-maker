@@ -2,7 +2,7 @@ import { NextApiHandler } from "next";
 import puppeteer from "puppeteer";
 
 const Handler: NextApiHandler = async (_req, res) => {
-  const browser = await puppeteer.launch({ headless: true })
+  const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox", "--disabled-setupid-sandbox"], })
   const page = await browser.newPage()
   const url = "http://localhost:3000" + String(_req.query["url"])
   console.log(url)
